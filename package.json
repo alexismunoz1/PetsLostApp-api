@@ -1,0 +1,20 @@
+{
+   "name": "algolia",
+   "version": "1.0.0",
+   "license": "MIT",
+   "scripts": {
+      "dev:be": "nodemon --watch './server/index.ts' --exec 'ts-node ./server/index.ts'",
+      "dev": "npm run dev:be",
+      "build:be": "tsc",
+      "build": "npm run build:be",
+      "start": "node ./be-dist/index.js"
+   },
+   "dependencies": {
+      "@types/express": "^4.17.13",
+      "dotenv": "^10.0.0",
+      "express": "^4.17.1",
+      "pg": "^8.7.1",
+      "pg-hstore": "^2.3.4",
+      "sequelize": "^6.9.0"
+   }
+}
