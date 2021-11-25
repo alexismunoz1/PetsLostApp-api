@@ -5,7 +5,7 @@ import "dotenv/config";
 import { createUser, getUsers, getUserByPk } from "./controllers/user-controller";
 const app = express();
 const port = process.env.PORT || 3000;
-const staticDirPath = path.resolve(__dirname, "../public");
+const staticDirPath = path.resolve(__dirname, "../../dist");
 
 app.use(express.json());
 app.use(cors());
@@ -34,7 +34,7 @@ app.get("/user/:id", async (req, res) => {
 app.use(express.static(staticDirPath));
 
 app.get("*", function (req, res) {
-   res.sendFile(staticDirPath + "./index.html");
+   res.sendFile(staticDirPath + "/index.html");
 });
 
 app.listen(port, () => {
