@@ -1,3 +1,4 @@
+import { User } from "./../models/user";
 import { sequelize } from "./conn";
 
-sequelize.sync({ force: true });
+User.sync({ alter: true });

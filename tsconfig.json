@@ -3,8 +3,7 @@
       "target": "ESNext",
       "module": "CommonJS",
       "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "outDir": "be-dist"
+      "resolveJsonModule": true
    },
    "includes": ["./server/**/*.ts"]
 }

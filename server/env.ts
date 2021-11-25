@@ -1,2 +1,2 @@
 import "dotenv/config";
-import "../index";
+import "./index";
