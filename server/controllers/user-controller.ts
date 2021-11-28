@@ -1,21 +1,22 @@
 import { User } from "../models/user";
 
-export async function createUser(userData) {
+export async function findOrCreateUser(userData) {
    const { fullname, email } = userData;
    if (!fullname || !email) {
       throw "fullname and email are required";
    }
 
-   const user = await User.create(userData);
+   const [user, created] = await User.findOrCreate({
+      where: { email: email },
+      defaults: {
+         fullname,
+         email,
+      },
+   });
+
    return user;
 }
 
 export async function getUsers() {
-   const users = await User.findAll({});
-   return users;
-}
-
-export async function getUserByPk(id: string) {
-   const user = await User.findByPk(id);
-   return user;
+   return await User.findAll();
 }
