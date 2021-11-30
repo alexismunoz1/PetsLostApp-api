@@ -29,6 +29,7 @@ class initLoginPage extends HTMLElement {
             .value.toString();
 
          state.loginMethod(email, password).then((response) => {
+            console.log(response);
             if (response.status === 200) {
                Router.go("/home");
             } else {

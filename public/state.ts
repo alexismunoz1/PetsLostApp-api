@@ -11,7 +11,7 @@ export const state = {
       this.data = data;
    },
 
-   createAccount(fullname: string, email: string, password: string): Promise<Response> {
+   async createAccount(fullname: string, email: string, password: string): Promise<Response> {
       return fetch(`${API_BASE_URL}/auth`, {
          method: "POST",
          headers: {
@@ -25,7 +25,7 @@ export const state = {
       });
    },
 
-   loginMethod(email: string, password: string): Promise<Response> {
+   async loginMethod(email: string, password: string): Promise<Response> {
       return fetch(`${API_BASE_URL}/auth/token`, {
          method: "POST",
          headers: {
