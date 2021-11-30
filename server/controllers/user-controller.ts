@@ -17,6 +17,11 @@ export async function findOrCreateUser(userData) {
    return user;
 }
 
+export async function findUserById(id) {
+   const user = await User.findByPk(id);
+   return user;
+}
+
 export async function getUsers() {
    return await User.findAll();
 }

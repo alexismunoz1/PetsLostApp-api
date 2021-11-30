@@ -4,7 +4,7 @@ import * as cors from "cors";
 import "dotenv/config";
 
 import { findOrCreateAuth, authFunction } from "./controllers/auth-controller";
-import { findOrCreateUser, getUsers } from "./controllers/user-controller";
+import { findOrCreateUser, getUsers, findUserById } from "./controllers/user-controller";
 import { authMiddleware } from "./controllers/middlewares";
 
 const staticDirPath = path.resolve(__dirname, "../../dist");
@@ -31,30 +31,35 @@ app.post("/auth", async (req, res) => {
    const auth = await findOrCreateAuth(req.body, user);
 
    if (auth) {
-      res.json({ user, auth });
+      res.status(200).json({ user, auth });
    } else {
       res.status(400).json({ error: "Unauthorized" });
    }
 });
 
-//Singin
+//login
 app.post("/auth/token", async (req, res) => {
    const auth = await authFunction(req.body);
    if (auth) {
-      res.json(auth);
+      res.status(200).json(auth);
    } else {
       res.status(400).json({ message: "Invalid credentials" });
    }
 });
 
 app.get("/me", authMiddleware, async (req, res) => {
-   res.json(req["_user"]);
+   const user = await findUserById(req["_user"].id);
+   if (user) {
+      res.status(200).json(user);
+   } else {
+      res.status(400).json({ message: "Invalid credentials" });
+   }
 });
 
 app.use(express.static(staticDirPath));
 
 app.get("*", function (req, res) {
-   res.sendFile(staticDirPath + "/index.html");
+   staticDirPath + "/index.html";
 });
 
 app.listen(port, () => {

@@ -33,6 +33,5 @@ export async function authFunction(authData) {
    });
 
    const token = jwt.sign({ id: auth.get("user_id") }, process.env.JWT_SECRET);
-
    return token;
 }
