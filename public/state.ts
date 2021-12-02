@@ -1,17 +1,22 @@
 const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
 
 export const state = {
-   data: {},
+   data: {
+      user: {
+         token: null,
+      },
+   },
 
-   getData() {
+   getState() {
       return this.data;
    },
 
-   setData(data) {
-      this.data = data;
+   setState(newData) {
+      this.data = newData;
+      console.log("State updated", this.data);
    },
 
-   async createAccount(fullname: string, email: string, password: string): Promise<Response> {
+   singupOrLogin(fullname: string, email: string, password: string): Promise<Response> {
       return fetch(`${API_BASE_URL}/auth`, {
          method: "POST",
          headers: {
@@ -25,8 +30,10 @@ export const state = {
       });
    },
 
-   async loginMethod(email: string, password: string): Promise<Response> {
-      return fetch(`${API_BASE_URL}/auth/token`, {
+   async getTokenUser(email: string, password: string): Promise<any> {
+      const currentState = this.getState();
+
+      const resToken = await fetch(`${API_BASE_URL}/auth/token`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json",
@@ -36,5 +43,16 @@ export const state = {
             password,
          }),
       });
+
+      const token = await resToken.json();
+
+      if (token.token) {
+         currentState.user.token = token.token;
+         this.setState(currentState);
+      } else {
+         currentState.user.token = null;
+      }
+
+      return resToken;
    },
 };

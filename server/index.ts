@@ -3,7 +3,7 @@ import * as path from "path";
 import * as cors from "cors";
 import "dotenv/config";
 
-import { findOrCreateAuth, authFunction } from "./controllers/auth-controller";
+import { findOrCreateAuth, tokenFunction } from "./controllers/auth-controller";
 import { findOrCreateUser, getUsers, findUserById } from "./controllers/user-controller";
 import { authMiddleware } from "./controllers/middlewares";
 
@@ -39,9 +39,9 @@ app.post("/auth", async (req, res) => {
 
 //login
 app.post("/auth/token", async (req, res) => {
-   const auth = await authFunction(req.body);
-   if (auth) {
-      res.status(200).json(auth);
+   const token = await tokenFunction(req.body);
+   if (token) {
+      res.status(200).json({ token });
    } else {
       res.status(400).json({ message: "Invalid credentials" });
    }

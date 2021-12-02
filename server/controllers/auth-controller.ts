@@ -22,7 +22,7 @@ export async function findOrCreateAuth(authData, user) {
    return auth;
 }
 
-export async function authFunction(authData) {
+export async function tokenFunction(authData) {
    const { email, password } = authData;
    const passwordHash = getSHA256ofJSON(password);
    const auth = await Auth.findOne({

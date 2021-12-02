@@ -28,9 +28,8 @@ class initLoginPage extends HTMLElement {
             .shadowRoot.querySelector("input")
             .value.toString();
 
-         state.loginMethod(email, password).then((response) => {
-            console.log(response);
-            if (response.status === 200) {
+         state.getTokenUser(email, password).then((res) => {
+            if (res.status === 200) {
                Router.go("/home");
             } else {
                alert("Error al iniciar sesión, verifique sus datos");

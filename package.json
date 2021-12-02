@@ -6,7 +6,7 @@
       "sync": "ts-node ./server/db/sync.ts",
       "dev:be": "nodemon --watch './server/index.ts' --exec 'ts-node ./server/index.ts'",
       "dev:fe": "parcel serve ./public/index.html",
-      "dev": "yarn dev:be && yarn dev:fe",
+      "dev": "yarn concurrently 'yarn dev:fe' 'yarn dev:be'",
       "build:be": "tsc",
       "build:fe": "parcel build ./public/index.html --dist-dir ./dist",
       "build": "yarn build:be && yarn build:fe",
@@ -15,6 +15,7 @@
    "dependencies": {
       "@types/express": "^4.17.13",
       "@vaadin/router": "^1.7.4",
+      "concurrently": "^6.4.0",
       "cors": "^2.8.5",
       "dotenv": "^10.0.0",
       "express": "^4.17.1",

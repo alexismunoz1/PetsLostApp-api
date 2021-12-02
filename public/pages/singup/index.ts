@@ -44,8 +44,9 @@ class initSingupPage extends HTMLElement {
          } else if (password !== confirmPassword) {
             alert("Las contraseñas no coinciden");
          } else {
-            state.createAccount(fullname, email, password).then((response) => {
-               if (response.status === 200) {
+            state.singupOrLogin(fullname, email, password).then((res) => {
+               if (res.status === 200) {
+                  state.getTokenUser(email, password).then((res) => console.log(res));
                   alert("Cuenta creada con éxito");
                   Router.go("/home");
                } else {
