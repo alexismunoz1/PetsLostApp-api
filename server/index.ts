@@ -41,7 +41,7 @@ app.post("/auth", async (req, res) => {
 app.post("/auth/token", async (req, res) => {
    const token = await tokenFunction(req.body);
    if (token) {
-      res.status(200).json({ token });
+      res.status(200).json(token);
    } else {
       res.status(400).json({ message: "Invalid credentials" });
    }

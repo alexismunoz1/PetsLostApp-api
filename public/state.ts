@@ -4,6 +4,8 @@ export const state = {
    data: {
       user: {
          token: null,
+         email: null,
+         fullname: null,
       },
    },
 
@@ -54,5 +56,32 @@ export const state = {
       }
 
       return resToken;
+   },
+
+   async geDatatUser(token: string): Promise<any> {
+      const currentState = this.getState();
+
+      const resUser = await fetch(`${API_BASE_URL}/me`, {
+         method: "GET",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+      });
+
+      const user = await resUser.json();
+      console.log(user);
+
+      if (user.email) {
+         currentState.user.email = user.email;
+         currentState.user.fullname = user.fullname;
+         this.setState(currentState);
+      } else {
+         currentState.user.token = null;
+         currentState.user.email = null;
+         currentState.user.fullname = null;
+      }
+
+      return resUser;
    },
 };
