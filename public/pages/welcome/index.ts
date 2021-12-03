@@ -6,20 +6,30 @@ class initHomePage extends HTMLElement {
       this.render();
    }
    render(): void {
+      const currentState = state.getState();
+
       this.innerHTML = `
-            <h1>Soy la home-page</h1>
-            <button-comp class="login__button">Iniciar seción</button-comp>
-            <button-comp class="singup__button">Crear cuenta</button-comp>
+            <h1>Welcome</h1>
+            <form class="welcome-form">
+               <input-comp class="input-email">Email</input-comp>
+               <button-comp class="button-next">Siguiente</button-comp>
+            </form>
         `;
 
-      const loginButton = this.querySelector(".login__button");
-      loginButton.addEventListener("click", () => {
-         Router.go("/login");
-      });
+      const welcomeForm = this.querySelector(".welcome-form");
+      welcomeForm.addEventListener("submit", (e) => {
+         e.preventDefault();
+         const email = this.querySelector(".input-email")
+            .shadowRoot.querySelector("input")
+            .value.toString();
 
-      const singupButton = this.querySelector(".singup__button");
-      singupButton.addEventListener("click", () => {
-         Router.go("/singup");
+         state.verifyEmail(email).then((res) => {
+            if (res.status === 200) {
+               Router.go("/login");
+            } else if (res.status === 404) {
+               Router.go("/singup");
+            }
+         });
       });
    }
 }

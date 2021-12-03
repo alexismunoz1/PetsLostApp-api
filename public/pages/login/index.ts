@@ -10,7 +10,6 @@ class initLoginPage extends HTMLElement {
             <h1>Iniciar sesión</h1>
 
             <form class="login__form">
-               <input-comp class="login-email">Email</input-comp>
                <input-comp class="login-password">Contraseña</input-comp>
                <button-comp class="login__button">Iniciar sesión</button-comp>
             </form>
@@ -20,15 +19,11 @@ class initLoginPage extends HTMLElement {
       formCont.addEventListener("submit", (event) => {
          event.preventDefault();
 
-         const email = this.querySelector(".login-email")
-            .shadowRoot.querySelector("input")
-            .value.toString();
-
          const password = this.querySelector(".login-password")
             .shadowRoot.querySelector("input")
             .value.toString();
 
-         state.getTokenUser(email, password).then((res) => {
+         state.getTokenUser(password).then((res) => {
             if (res.status === 200) {
                Router.go("/home");
             } else {

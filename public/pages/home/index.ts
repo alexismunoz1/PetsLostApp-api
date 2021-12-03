@@ -16,9 +16,9 @@ class initHomePage extends HTMLElement {
       `;
 
       const contUserData: any = this.querySelector(".cont__user-data");
-      const buttonData = this.querySelector(".button-data");
       const userFullname: any = this.querySelector(".user-fullname");
       const userEmail = this.querySelector(".user-email");
+      const buttonData = this.querySelector(".button-data");
 
       buttonData.addEventListener("click", () => {
          const currentState = state.getState();

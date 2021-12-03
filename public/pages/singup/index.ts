@@ -11,7 +11,6 @@ class initSingupPage extends HTMLElement {
 
             <form class="singup__form">
                <input-comp class="singup-fullname">Nombre</input-comp>
-               <input-comp class="singup-email">Email</input-comp>
                <input-comp class="singup-password">Contraseña</input-comp>
                <input-comp class="singup-confirm-password">Repetir contraseña</input-comp>
                <button-comp class="singup__button">Crear cuenta</button-comp>
@@ -27,10 +26,6 @@ class initSingupPage extends HTMLElement {
             .shadowRoot.querySelector("input")
             .value.toString();
 
-         const email = this.querySelector(".singup-email")
-            .shadowRoot.querySelector("input")
-            .value.toString();
-
          const password = this.querySelector(".singup-password")
             .shadowRoot.querySelector("input")
             .value.toString();
@@ -39,14 +34,18 @@ class initSingupPage extends HTMLElement {
             .shadowRoot.querySelector("input")
             .value.toString();
 
-         if (fullname === "" || email === "" || password === "") {
+         if (fullname === "" || password === "" || confirmPassword === "") {
             alert("Todos los campos son obligatorios");
-         } else if (password !== confirmPassword) {
+         }
+
+         if (password !== confirmPassword) {
             alert("Las contraseñas no coinciden");
-         } else {
-            state.singupOrLogin(fullname, email, password).then((res) => {
+         }
+
+         if (password === confirmPassword) {
+            state.singup(fullname, password).then((res) => {
                if (res.status === 200) {
-                  state.getTokenUser(email, password).then((res) => console.log(res));
+                  state.getTokenUser(password);
                   alert("Cuenta creada con éxito");
                   Router.go("/home");
                } else {

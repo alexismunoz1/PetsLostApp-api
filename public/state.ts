@@ -1,38 +1,71 @@
-const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
+// const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
+const API_BASE_URL = "http://localhost:3000";
 
 export const state = {
    data: {
-      user: {
-         token: null,
-         email: null,
-         fullname: null,
-      },
+      user: {},
    },
 
    getState() {
       return this.data;
    },
 
-   setState(newData) {
+   setState(newData): void {
       this.data = newData;
       console.log("State updated", this.data);
    },
 
-   singupOrLogin(fullname: string, email: string, password: string): Promise<Response> {
-      return fetch(`${API_BASE_URL}/auth`, {
+   async verifyEmail(email: string): Promise<Response> {
+      const currentState = this.getState();
+      const resVerifyEmail = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({
+            email,
+         }),
+      });
+
+      this.setState({
+         ...currentState,
+         user: {
+            ...currentState.user,
+            email: email,
+         },
+      });
+
+      return resVerifyEmail;
+   },
+
+   async singup(fullname: string, password: string): Promise<Response> {
+      const currentState = this.getState();
+      const currentEmail: string = currentState.user.email;
+
+      const resSingupOrLogin = await fetch(`${API_BASE_URL}/auth`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json",
          },
          body: JSON.stringify({
             fullname,
-            email,
+            email: currentEmail,
             password,
          }),
       });
+
+      this.setState({
+         ...currentState,
+         user: {
+            ...currentState.user,
+            fullname: fullname,
+         },
+      });
+
+      return resSingupOrLogin;
    },
 
-   async getTokenUser(email: string, password: string): Promise<any> {
+   async getTokenUser(password: string): Promise<any> {
       const currentState = this.getState();
 
       const resToken = await fetch(`${API_BASE_URL}/auth/token`, {
@@ -41,19 +74,20 @@ export const state = {
             "Content-Type": "application/json",
          },
          body: JSON.stringify({
-            email,
+            email: currentState.user.email,
             password,
          }),
       });
 
       const token = await resToken.json();
 
-      if (token.token) {
-         currentState.user.token = token.token;
-         this.setState(currentState);
-      } else {
-         currentState.user.token = null;
-      }
+      this.setState({
+         ...currentState,
+         user: {
+            ...currentState.user,
+            token: token,
+         },
+      });
 
       return resToken;
    },
@@ -61,7 +95,7 @@ export const state = {
    async geDatatUser(token: string): Promise<any> {
       const currentState = this.getState();
 
-      const resUser = await fetch(`${API_BASE_URL}/me`, {
+      const resDataUser = await fetch(`${API_BASE_URL}/me`, {
          method: "GET",
          headers: {
             "Content-Type": "application/json",
@@ -69,19 +103,8 @@ export const state = {
          },
       });
 
-      const user = await resUser.json();
-      console.log(user);
+      const user = await resDataUser.json();
 
-      if (user.email) {
-         currentState.user.email = user.email;
-         currentState.user.fullname = user.fullname;
-         this.setState(currentState);
-      } else {
-         currentState.user.token = null;
-         currentState.user.email = null;
-         currentState.user.fullname = null;
-      }
-
-      return resUser;
+      return resDataUser;
    },
 };
