@@ -1,10 +1,10 @@
 import { initRouter } from "./router";
 
 // Pages
-import "./pages/welcome/index";
-import "./pages/singup/index";
-import "./pages/login/index";
 import "./pages/home/index";
+import "./pages/verify-email/index";
+import "./pages/login/index";
+import "./pages/singup/index";
 
 // Components
 import "./components/input/";

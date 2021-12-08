@@ -33,4 +33,4 @@ class initHomePage extends HTMLElement {
       });
    }
 }
-customElements.define("welcome-page", initHomePage);
+customElements.define("verify-email-page", initHomePage);

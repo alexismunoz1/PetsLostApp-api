@@ -1,4 +1,4 @@
-import { User } from "../models/user";
+import { User } from "../models/index";
 
 export const UserController = {
    async findOrCreateUser(userData) {

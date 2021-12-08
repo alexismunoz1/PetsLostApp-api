@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./users";
 import { Auth } from "./auth";
 
 User.hasOne(Auth);

@@ -1,13 +1,13 @@
-import { Auth } from "../models/auth";
+import { Auth } from "../models/index";
 import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
 import "dotenv/config";
 
-export const authController = {
-   getSHA256ofJSON(input) {
-      return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
-   },
+function getSHA256ofJSON(input) {
+   return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
+}
 
+export const authController = {
    async findOrCreateAuth(authData, user) {
       const { email, password } = authData;
 
@@ -15,7 +15,7 @@ export const authController = {
          where: { user_id: user.get("id") },
          defaults: {
             email,
-            password: this.getSHA256ofJSON(password),
+            password: getSHA256ofJSON(password),
             user_id: user.get("id"),
          },
       });
@@ -24,7 +24,7 @@ export const authController = {
    },
    async tokenFunction(authData) {
       const { email, password } = authData;
-      const passwordHash = this.getSHA256ofJSON(password);
+      const passwordHash = getSHA256ofJSON(password);
       const auth = await Auth.findOne({
          where: {
             email,
