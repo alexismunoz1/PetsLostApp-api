@@ -73,7 +73,7 @@ app.get("/me", authMiddleware, async (req, res) => {
 });
 
 app.put("/me", authMiddleware, async (req, res) => {
-   // endpoint para actualizar el usuario autenticado
+   // endpoint para actualizar los datos del usuario autenticado
    const userId = req["_user"].id;
    const user = await UserController.updateDataUser(userId, req.body);
    if (user) {
@@ -83,24 +83,27 @@ app.put("/me", authMiddleware, async (req, res) => {
    }
 });
 
-app.get("/me/pets", authMiddleware, async (req, res) => {
-   // const pets = await PetController.getPetsByUserId(req["_user"].id);
-   // if (pets) {
-   //    res.status(200).json(pets);
-   // } else {
-   //    res.status(400).json({ message: "Invalid credentials" });
-   // }
-});
-
 app.post("/me/pets", authMiddleware, async (req, res) => {
+   // endpoint para crear una nueva mascota
    const { email } = req.body;
    const user = await UserController.findUserByEmail(email);
    const pet = await PetController.createNewLostPet(req.body, req["_user"].id);
 
    if (pet) {
-      res.status(200).json({ user, pet });
+      res.status(200).json(pet);
    } else {
       res.status(400).json({ message: "Invalid credentials" });
+   }
+});
+
+app.get("/me/pets", authMiddleware, async (req, res) => {
+   // endpoint para obtener las mascotas del usuario autenticado
+   const userId = req["_user"].id;
+   const pets = await UserController.getPetsByUser(userId);
+   if (pets) {
+      res.status(200).json(pets);
+   } else {
+      res.status(400).json({ error: "Invalid credentials" });
    }
 });
 

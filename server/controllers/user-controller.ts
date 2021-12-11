@@ -1,4 +1,4 @@
-import { User } from "../models/index";
+import { User, Auth, Pet } from "../models/index";
 
 export const UserController = {
    async findOrCreateUser(userData: any) {
@@ -26,7 +26,15 @@ export const UserController = {
       });
    },
 
-   async getUserPets(userId) {},
+   async getPetsByUser(userId: number) {
+      const pets = await (
+         await User.findByPk(userId, {
+            include: [{ model: Pet }],
+         })
+      ).get("pets");
+
+      return pets;
+   },
 
    async findUserByEmail(email: string) {
       return await User.findOne({
