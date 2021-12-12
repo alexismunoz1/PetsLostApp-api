@@ -1,17 +1,22 @@
+// modulos y dependencias
 import * as express from "express";
 import * as path from "path";
 import * as cors from "cors";
 import "dotenv/config";
 
+// controllers
 import { authController } from "./controllers/auth-controller";
 import { UserController } from "./controllers/user-controller";
 import { PetController } from "./controllers/pet-controller";
-import { authMiddleware } from "./controllers/middlewares";
 
+// middlewares
+import { authMiddle } from "./controllers/middlewares";
+import { User } from "./models";
+
+// inicializacion de express
 const staticDirPath = path.resolve(__dirname, "../../dist");
 const port = process.env.PORT || 3000;
 const app = express();
-
 app.use(express.json());
 app.use(cors());
 
@@ -61,7 +66,7 @@ app.post("/auth/token", async (req, res) => {
    }
 });
 
-app.get("/me", authMiddleware, async (req, res) => {
+app.get("/me", authMiddle, async (req, res) => {
    // endpoint para obtener el usuario autenticado
    const userId = req["_user"].id;
    const user = await UserController.findUserById(userId);
@@ -72,7 +77,7 @@ app.get("/me", authMiddleware, async (req, res) => {
    }
 });
 
-app.put("/me", authMiddleware, async (req, res) => {
+app.put("/me", authMiddle, async (req, res) => {
    // endpoint para actualizar los datos del usuario autenticado
    const userId = req["_user"].id;
    const user = await UserController.updateDataUser(userId, req.body);
@@ -83,23 +88,36 @@ app.put("/me", authMiddleware, async (req, res) => {
    }
 });
 
-app.post("/me/pets", authMiddleware, async (req, res) => {
+app.post("/me/pets", authMiddle, async (req, res) => {
    // endpoint para crear una nueva mascota
-   const { email } = req.body;
-   const user = await UserController.findUserByEmail(email);
-   const pet = await PetController.createNewLostPet(req.body, req["_user"].id);
+   const userId = req["_user"].id;
+   const pet = await PetController.createNewLostPet(req.body, userId);
 
    if (pet) {
       res.status(200).json(pet);
    } else {
-      res.status(400).json({ message: "Invalid credentials" });
+      res.status(400).json({ error: "Invalid credentials" });
    }
 });
 
-app.get("/me/pets", authMiddleware, async (req, res) => {
+app.put("/me/pets/:id", authMiddle, async (req, res) => {
+   // endpoint para actualizar los datos de una mascota
+   const userId = req["_user"].id;
+   const petId = req.params.id;
+   const pet = await PetController.updatePet(req.body, petId, userId);
+
+   if (pet) {
+      res.status(200).json(pet);
+   } else {
+      res.status(404).json({ error: "Pet id does not exist" });
+   }
+});
+
+app.get("/me/pets", authMiddle, async (req, res) => {
    // endpoint para obtener las mascotas del usuario autenticado
    const userId = req["_user"].id;
-   const pets = await UserController.getPetsByUser(userId);
+   const pets = await PetController.getPetsByUserId(userId);
+
    if (pets) {
       res.status(200).json(pets);
    } else {

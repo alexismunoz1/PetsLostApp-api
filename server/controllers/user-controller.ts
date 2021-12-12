@@ -26,16 +26,6 @@ export const UserController = {
       });
    },
 
-   async getPetsByUser(userId: number) {
-      const pets = await (
-         await User.findByPk(userId, {
-            include: [{ model: Pet }],
-         })
-      ).get("pets");
-
-      return pets;
-   },
-
    async findUserByEmail(email: string) {
       return await User.findOne({
          where: { email: email },
