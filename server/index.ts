@@ -1,42 +1,44 @@
-// modulos y dependencias
+// Modulos y dependencias
 import * as express from "express";
 import * as path from "path";
 import * as cors from "cors";
 import "dotenv/config";
 
-// controllers
+// Controllers
 import { authController } from "./controllers/auth-controller";
-import { UserController } from "./controllers/user-controller";
-import { PetController } from "./controllers/pet-controller";
+import { userController } from "./controllers/user-controller";
+import { petController } from "./controllers/pet-controller";
+import { algoliaController } from "./controllers/algolia-controller";
 
-// middlewares
-import { authMiddle } from "./controllers/middlewares";
-import { User } from "./models";
+// Middlewares
+import { authMiddlewares } from "./controllers/middlewares";
 
-// inicializacion de express
-const staticDirPath = path.resolve(__dirname, "../../dist");
-const port = process.env.PORT || 3000;
+// Inicializacion de express
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Puerto de la aplicacion en heroku o 3000 en local y asignacion de rutas
+const staticDirPath = path.resolve(__dirname, "../../dist");
+const port = process.env.PORT || 3000;
+
+// Endpoint para testear el servidor
 app.get("/test", (req, res) => {
-   // endpoint para testear el servidor
    res.send({
       message: true,
    });
 });
 
+// Endpoint para traer todos los usuarios
 app.get("/users", async (req, res) => {
-   // endpoint para traer todos los usuarios
-   const users = await UserController.getUsers();
+   const users = await userController.getUsers();
    res.send(users);
 });
 
+// Endpoint para verificar si el mail existe en la base de datos
 app.post("/auth/verify-email", async (req, res) => {
-   // endpoint para verificar si el mail existe en la base de datos
    const { email } = req.body;
-   const user = await UserController.findUserByEmail(email);
+   const user = await userController.findUserByEmail(email);
    if (user) {
       res.status(200).json(user);
    } else {
@@ -44,9 +46,9 @@ app.post("/auth/verify-email", async (req, res) => {
    }
 });
 
+// Endpoint para autenticar un usuario
 app.post("/auth", async (req, res) => {
-   // endpoint para autenticar un usuario
-   const user = await UserController.findOrCreateUser(req.body);
+   const user = await userController.findOrCreateUser(req.body);
    const auth = await authController.findOrCreateAuth(req.body, user);
 
    if (user && auth) {
@@ -56,8 +58,8 @@ app.post("/auth", async (req, res) => {
    }
 });
 
+// Endpoint para obtener el token de autenticacion
 app.post("/auth/token", async (req, res) => {
-   // endpoint para obtener el token de autenticacion
    const token = await authController.tokenFunction(req.body);
    if (token) {
       res.status(200).json(token);
@@ -66,10 +68,10 @@ app.post("/auth/token", async (req, res) => {
    }
 });
 
-app.get("/me", authMiddle, async (req, res) => {
-   // endpoint para obtener el usuario autenticado
+// Endpoint para obtener el usuario autenticado
+app.get("/me", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
-   const user = await UserController.findUserById(userId);
+   const user = await userController.findUserById(userId);
    if (user) {
       res.status(200).json(user);
    } else {
@@ -77,10 +79,10 @@ app.get("/me", authMiddle, async (req, res) => {
    }
 });
 
-app.put("/me", authMiddle, async (req, res) => {
-   // endpoint para actualizar los datos del usuario autenticado
+// Endpoint para actualizar los datos del usuario autenticado
+app.put("/me", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
-   const user = await UserController.updateDataUser(userId, req.body);
+   const user = await userController.updateDataUser(userId, req.body);
    if (user) {
       res.status(200).json(user);
    } else {
@@ -88,40 +90,72 @@ app.put("/me", authMiddle, async (req, res) => {
    }
 });
 
-app.post("/me/pets", authMiddle, async (req, res) => {
-   // endpoint para crear una nueva mascota
+// Endpoint para crear una nueva mascota
+app.post("/me/pets", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
-   const pet = await PetController.createNewLostPet(req.body, userId);
+   const pet = await petController.createNewLostPet(req.body, userId);
+   const petInAlgolia = await algoliaController.addPetInAlgolia(pet);
 
    if (pet) {
-      res.status(200).json(pet);
+      res.status(200).json({ pet, petInAlgolia });
    } else {
       res.status(400).json({ error: "Invalid credentials" });
    }
 });
 
-app.put("/me/pets/:id", authMiddle, async (req, res) => {
-   // endpoint para actualizar los datos de una mascota
+// Endpoint para actualizar los datos de una mascota
+app.put("/me/pets", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
-   const petId = req.params.id;
-   const pet = await PetController.updatePet(req.body, petId, userId);
 
-   if (pet) {
-      res.status(200).json(pet);
-   } else {
-      res.status(404).json({ error: "Pet id does not exist" });
+   try {
+      const pet = await petController.updatePet(req.body, userId);
+      const updatePetInAlgolia = await algoliaController.updatePetInAlgolia(pet);
+
+      res.status(200).json({ pet, updatePetInAlgolia });
+   } catch (error) {
+      res.send({ error });
    }
 });
 
-app.get("/me/pets", authMiddle, async (req, res) => {
-   // endpoint para obtener las mascotas del usuario autenticado
+// Endpoint para obtener las mascotas del usuario autenticado
+app.get("/me/pets", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
-   const pets = await PetController.getPetsByUserId(userId);
+   const { petname } = req.body;
+   try {
+      if (petname) {
+         const pet = await petController.findPetByName(userId, petname);
 
-   if (pets) {
+         res.status(200).json(pet);
+      } else {
+         const pets = await petController.getPetsByUserId(userId);
+         res.status(200).json(pets);
+      }
+   } catch (error) {
+      res.send({ error });
+   }
+});
+
+// Endpoint para eliminar una mascota del usuario autenticado
+app.delete("/me/pets", authMiddlewares, async (req, res) => {
+   const userId = req["_user"].id;
+
+   try {
+      const pet = await petController.deletePet(req.body, userId);
+      const deletePetInAlgolia = await algoliaController.deletePetInAlgolia(pet);
+
+      res.status(200).json({ message: "Pet deleted", pet, deletePetInAlgolia });
+   } catch (error) {
+      res.send({ error });
+   }
+});
+
+// Endpoint para obtener las mascotas cercanas a una ubicacion
+app.get("/pets/around", async (req, res) => {
+   try {
+      const pets = await algoliaController.searchPetsInAlgoliaByLocation(req.query);
       res.status(200).json(pets);
-   } else {
-      res.status(400).json({ error: "Invalid credentials" });
+   } catch (error) {
+      res.send({ error });
    }
 });
 

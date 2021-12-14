@@ -8,6 +8,7 @@ Pet.init(
       petname: DataTypes.STRING,
       lat: DataTypes.FLOAT,
       lng: DataTypes.FLOAT,
+      petstate: DataTypes.STRING,
    },
    { sequelize, modelName: "pet" }
 );

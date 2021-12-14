@@ -3,11 +3,13 @@ import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
 import "dotenv/config";
 
-function getSHA256ofJSON(input) {
+// Funcion para encriptar la contraseña
+function encryptPassword(input) {
    return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
 }
 
 export const authController = {
+   // Método para crear un nuevo usuario en la tabla auth.
    async findOrCreateAuth(authData, user) {
       const { email, password } = authData;
 
@@ -15,16 +17,18 @@ export const authController = {
          where: { user_id: user.get("id") },
          defaults: {
             email,
-            password: getSHA256ofJSON(password),
+            password: encryptPassword(password),
             user_id: user.get("id"),
          },
       });
 
       return auth;
    },
+
+   // Método para obtener el token de autenticacion.
    async tokenFunction(authData) {
       const { email, password } = authData;
-      const passwordHash = getSHA256ofJSON(password);
+      const passwordHash = encryptPassword(password);
       const auth = await Auth.findOne({
          where: {
             email,
@@ -32,6 +36,8 @@ export const authController = {
          },
       });
 
+      // Si el usuario existe y la contraseña es correcta,
+      // se genera el token de autenticacion.
       const token = jwt.sign({ id: auth.get("user_id") }, process.env.JWT_SECRET);
       return token;
    },
