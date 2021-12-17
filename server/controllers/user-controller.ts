@@ -1,47 +1,67 @@
 import { User } from "../models/index";
 
 export const userController = {
-   // Método para crear un nuevo usuario.
-   async findOrCreateUser(userData: any) {
-      const { fullname, email } = userData;
-
-      const [user, created] = await User.findOrCreate({
-         where: { email: email },
-         defaults: {
+   async createUser(fullname: string, email: string): Promise<User> {
+      // Método para crear un nuevo usuario.
+      try {
+         return await User.create({
             fullname,
             email,
-         },
-      });
-
-      return user;
+         });
+      } catch (error) {
+         throw new Error(error);
+      }
    },
 
-   // Método para actualizar los datos de un usuario.
-   async updateDataUser(userId: number, newData: any) {
-      const { fullname, email } = newData;
-
+   async updateDataUser(userId: number, fullname: any, email: any): Promise<User> {
+      // Método para actualizar los datos de un usuario.
       const user = await User.findByPk(userId);
+      const currentFullname = user.get("fullname");
+      const currentEmail = user.get("email");
 
-      return await user.update({
-         fullname,
-         email,
-      });
+      if (!fullname && fullname == "") {
+         fullname = currentFullname;
+      }
+      if (!email) {
+         email = currentEmail;
+      }
+
+      if (user) {
+         return await user.update({
+            fullname,
+            email,
+         });
+      } else {
+         return null;
+      }
    },
 
-   // Método para buscar un usuario por su email.
-   async findUserByEmail(email: string) {
-      return await User.findOne({
-         where: { email: email },
-      });
+   async findUserByEmail(email: string): Promise<User> {
+      // Método para buscar un usuario por su email.
+      try {
+         return await User.findOne({
+            where: { email: email },
+         });
+      } catch (error) {
+         throw new Error(error);
+      }
    },
 
-   // Método para buscar un usuario por su id.
-   async findUserById(id: number) {
-      return await User.findByPk(id);
+   async findUserById(id: number): Promise<User> {
+      // Método para buscar un usuario por su id.
+      try {
+         return await User.findByPk(id);
+      } catch (error) {
+         throw new Error(error);
+      }
    },
 
-   // Método para obtener todos los usuarios.
-   async getUsers() {
-      return await User.findAll();
+   async getUsers(): Promise<User[]> {
+      // Método para obtener todos los usuarios.
+      try {
+         return await User.findAll();
+      } catch (error) {
+         throw new Error(error);
+      }
    },
 };

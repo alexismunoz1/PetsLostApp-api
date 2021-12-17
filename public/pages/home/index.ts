@@ -13,6 +13,7 @@ class initHomePage extends HTMLElement {
          <p class="user-fullname"></p>
          <p class="user-email"></p>
       </div>
+      <button-comp class="button-report">Reportar mascotas</button-comp>
       `;
 
       const contUserData: any = this.querySelector(".cont__user-data");

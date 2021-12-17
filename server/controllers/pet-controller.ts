@@ -1,11 +1,15 @@
 import { Pet, User } from "../models/index";
 
 export const petController = {
-   // Método para crear una mascota.
-   async createNewLostPet(petData, userId) {
-      const { petname, petstate, lat, lng } = petData;
-
-      const pet = await Pet.create({
+   async createNewLostPet(
+      userId: number,
+      petname: string,
+      petstate: string,
+      lat: string,
+      lng: string
+   ): Promise<Pet> {
+      // Método para crear una mascota.
+      const pet: Pet = await Pet.create({
          petname,
          petstate,
          lat,
@@ -16,63 +20,81 @@ export const petController = {
       return pet;
    },
 
-   // Método para actualizar los datos de una mascota.
-   async updatePet(petNewData, userId) {
-      let { petname, newpetname, petstate, lat, lng } = petNewData;
-      if (!newpetname) {
-         newpetname = petname;
-      }
+   async updatePet(
+      userId: number,
+      petid: number,
+      petname: string,
+      petstate: string,
+      lat: string,
+      lng: string
+   ): Promise<Pet> {
+      // Método para actualizar los datos de una mascota.
 
-      const pet = await (
+      // Se busca al usuario que está actualmente autenticado,
+      // y se busca una mascota con el id que se recibe en la petición.
+      const pet: Pet = await (
          await User.findByPk(userId, {
-            include: { model: Pet, where: { petname: petname } },
+            include: { model: Pet, where: { id: petid } },
          })
       ).get("pets")[0];
 
-      pet.update({
-         petname: newpetname,
-         petstate,
-         lat,
-         lng,
-      });
+      if (pet) {
+         pet.update({
+            petname,
+            petstate,
+            lat,
+            lng,
+         });
 
-      return pet;
+         return pet;
+      } else {
+         return null;
+      }
    },
 
-   // Método para obtener todas las mascotas del usuario autenticado.
-   async getPetsByUserId(userId: number) {
+   async getPetsByUserId(userId: number): Promise<any> {
+      // Método para obtener todas las mascotas del usuario autenticado.
       const pets = await (
          await User.findByPk(userId, {
             include: [{ model: Pet }],
          })
       ).get("pets");
 
-      return pets;
+      if (pets) {
+         return pets;
+      } else {
+         return null;
+      }
    },
 
-   // Método para obtener una mascota por su nombre.
-   async findPetByName(userId, petName) {
+   async findPetByName(userId: number, petName: string): Promise<any> {
+      // Método para obtener una mascota por su nombre.
       const pet = await (
          await User.findByPk(userId, {
             include: { model: Pet, where: { petname: petName } },
          })
       ).get("pets");
 
-      return pet;
+      if (pet) {
+         return pet;
+      } else {
+         return null;
+      }
    },
 
-   // Método para eliminar una mascota.
-   async deletePet(petData, userId) {
-      const { petname } = petData;
-
+   async deletePet(userId: number, petId: number): Promise<any> {
+      // Método para eliminar una mascota.
       const pet = await (
          await User.findByPk(userId, {
-            include: { model: Pet, where: { petname: petname } },
+            include: { model: Pet, where: { id: petId } },
          })
       ).get("pets")[0];
 
-      pet.destroy();
-
-      return pet;
+      if (pet) {
+         pet.destroy();
+         return pet;
+      } else {
+         return null;
+      }
    },
 };
