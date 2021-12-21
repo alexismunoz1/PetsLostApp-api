@@ -54,12 +54,7 @@ export const algoliaController = {
       }
    },
 
-   async searchPetsInAlgoliaByLocation(
-      lat: any,
-      lng: any,
-      distance: number,
-      petstate: string
-   ): Promise<object> {
+   async searchPetsInAlgoliaByLocation(lat: any, lng: any, distance: number, petstate: string): Promise<object> {
       // Obtiene las mascotas de un usuario de Algolia por ubicación geográfica, distancia y estado.
       // El estado de la mascota, puede ser "lost" o "found".
       if (!distance) {

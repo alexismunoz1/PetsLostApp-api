@@ -4,6 +4,7 @@ import { state } from "../../state";
 class initHomePage extends HTMLElement {
    connectedCallback() {
       this.render();
+      this.getCurrentUbication();
    }
    render(): void {
       this.innerHTML = `
@@ -20,17 +21,40 @@ class initHomePage extends HTMLElement {
       const userFullname: any = this.querySelector(".user-fullname");
       const userEmail = this.querySelector(".user-email");
       const buttonData = this.querySelector(".button-data");
+      const buttonReport = this.querySelector(".button-report");
+
+      buttonReport.addEventListener("click", () => {
+         const currentState = state.getState();
+
+         if (currentState.user.token) {
+            Router.go("/report-pet");
+         } else {
+            Router.go("/verify-email");
+         }
+      });
 
       buttonData.addEventListener("click", () => {
          const currentState = state.getState();
          const token = currentState.user.token;
 
-         state.geDatatUser(token).then((data) => {
-            console.log(data);
-            userFullname.textContent = `Fullname:${currentState.user.fullname}`;
-            userEmail.textContent = `Email:${currentState.user.email}`;
-            contUserData.style.display = "block";
-         });
+         if (token) {
+            state.geDatatUser(token).then((data) => {
+               console.log(data);
+               userFullname.textContent = `Fullname:${currentState.user.fullname}`;
+               userEmail.textContent = `Email:${currentState.user.email}`;
+               contUserData.style.display = "block";
+            });
+         } else {
+            Router.go("/verify-email");
+         }
+      });
+   }
+
+   getCurrentUbication() {
+      navigator.geolocation.getCurrentPosition((position) => {
+         const lat = position.coords.latitude;
+         const lng = position.coords.longitude;
+         state.addCurrentUbication(lat, lng);
       });
    }
 }

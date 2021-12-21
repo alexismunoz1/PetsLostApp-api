@@ -15,6 +15,13 @@ export const state = {
       console.log("State updated", this.data);
    },
 
+   addCurrentUbication(lat, lng): void {
+      const currentState = this.getState();
+      currentState.user.lat = lat;
+      currentState.user.lng = lng;
+      this.setState(currentState);
+   },
+
    async verifyEmail(email: string): Promise<Response> {
       const currentState = this.getState();
       const resVerifyEmail = await fetch(`${API_BASE_URL}/auth/verify-email`, {
@@ -106,5 +113,26 @@ export const state = {
       const user = await resDataUser.json();
 
       return resDataUser;
+   },
+
+   async addPet(petname: string, lat, lng, petimage): Promise<any> {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const resReportPet = await fetch(`${API_BASE_URL}/me/pets`, {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            petname,
+            lat,
+            lng,
+            petimage,
+         }),
+      });
+
+      return resReportPet;
    },
 };

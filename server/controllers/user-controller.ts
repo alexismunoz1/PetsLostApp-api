@@ -19,7 +19,7 @@ export const userController = {
       const currentFullname = user.get("fullname");
       const currentEmail = user.get("email");
 
-      if (!fullname && fullname == "") {
+      if (!fullname) {
          fullname = currentFullname;
       }
       if (!email) {

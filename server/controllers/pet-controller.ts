@@ -1,17 +1,12 @@
 import { Pet, User } from "../models/index";
 
 export const petController = {
-   async createNewLostPet(
-      userId: number,
-      petname: string,
-      petstate: string,
-      lat: string,
-      lng: string
-   ): Promise<Pet> {
+   async createNewLostPet(userId: number, petname: string, lat: string, lng: string): Promise<Pet> {
       // Método para crear una mascota.
+      const defaultPetState: string = "lost";
       const pet: Pet = await Pet.create({
          petname,
-         petstate,
+         // petstate: petDefaultState,
          lat,
          lng,
          userId,
@@ -20,14 +15,7 @@ export const petController = {
       return pet;
    },
 
-   async updatePet(
-      userId: number,
-      petid: number,
-      petname: string,
-      petstate: string,
-      lat: string,
-      lng: string
-   ): Promise<Pet> {
+   async updatePet(userId: number, petid: number, petname: string, petstate: string, lat: string, lng: string): Promise<Pet> {
       // Método para actualizar los datos de una mascota.
 
       // Se busca al usuario que está actualmente autenticado,

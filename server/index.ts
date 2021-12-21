@@ -9,7 +9,6 @@ import { authController } from "./controllers/auth-controller";
 import { userController } from "./controllers/user-controller";
 import { petController } from "./controllers/pet-controller";
 import { algoliaController } from "./controllers/algolia-controller";
-// import { cloudinaryController } from "./controllers/cloudinary-controller";
 import { uploadImageCloudinary } from "./controllers/cloudinary-controller";
 
 // Middlewares
@@ -107,12 +106,10 @@ app.put("/me", authMiddlewares, async (req, res) => {
 app.post("/me/pets", authMiddlewares, async (req, res) => {
    // Endpoint para crear una nueva mascota
    const userId = req["_user"].id;
-   const { petname, petstate, lat, lng, petimage } = req.body;
+   const { petname, lat, lng, petimage } = req.body;
 
-   // const imageUri = await uploadImageCloudinary(petimage);
-   // console.log("imageUri !!!", imageUri);
-   // console.log("imageUri type!!!", typeof imageUri);
-   const pet = await petController.createNewLostPet(userId, petname, petstate, lat, lng);
+   const imageUri = await uploadImageCloudinary(petimage);
+   const pet = await petController.createNewLostPet(userId, petname, lat, lng);
 
    if (pet) {
       const petInAlgolia = await algoliaController.addPetInAlgolia(pet);
@@ -149,8 +146,8 @@ app.get("/me/pets", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
    const { petname } = req.body;
 
-   // Si se introduce un nombre de mascota en el query,
-   // se filtra por el nombre de la mascota del usuario autenticado.
+   // Si se introduce un nombre de mascota en el body,
+   // se filtra por el nombre de la mascota, del usuario autenticado.
    // Si no se introduce nada, se traen todas las mascotas del usuario autenticado.
    try {
       if (petname) {
