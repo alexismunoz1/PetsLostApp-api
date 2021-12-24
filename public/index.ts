@@ -1,4 +1,5 @@
 import { initRouter } from "./router";
+import { state } from "./state";
 
 // Pages
 import "./pages/home/index";
@@ -14,4 +15,5 @@ import "./components/button";
 (function main() {
    const rootEl = document.querySelector(".root");
    initRouter(rootEl);
+   state.initLocalStorage();
 })();

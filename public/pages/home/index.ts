@@ -39,7 +39,6 @@ class initHomePage extends HTMLElement {
 
          if (token) {
             state.geDatatUser(token).then((data) => {
-               console.log(data);
                userFullname.textContent = `Fullname:${currentState.user.fullname}`;
                userEmail.textContent = `Email:${currentState.user.email}`;
                contUserData.style.display = "block";

@@ -6,12 +6,20 @@ export const state = {
       user: {},
    },
 
+   initLocalStorage() {
+      const data = localStorage.getItem("data");
+      if (data) {
+         this.data = JSON.parse(data);
+      }
+   },
+
    getState() {
       return this.data;
    },
 
    setState(newData): void {
       this.data = newData;
+      localStorage.setItem("data", JSON.stringify(newData));
       console.log("State updated", this.data);
    },
 
@@ -113,6 +121,18 @@ export const state = {
       const user = await resDataUser.json();
 
       return resDataUser;
+   },
+
+   async currentMarkerPosition(lat, lng): Promise<any> {
+      const currentState = this.getState();
+      state.setState({
+         ...currentState,
+         user: {
+            ...currentState.user,
+            currentMarkerLat: lat,
+            currentMarkerLng: lng,
+         },
+      });
    },
 
    async addPet(petname: string, lat, lng, petimage): Promise<any> {

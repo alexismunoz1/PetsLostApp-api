@@ -6,7 +6,7 @@ export const petController = {
       const defaultPetState: string = "lost";
       const pet: Pet = await Pet.create({
          petname,
-         // petstate: petDefaultState,
+         petstate: defaultPetState,
          lat,
          lng,
          userId,
@@ -15,7 +15,14 @@ export const petController = {
       return pet;
    },
 
-   async updatePet(userId: number, petid: number, petname: string, petstate: string, lat: string, lng: string): Promise<Pet> {
+   async updatePet(
+      userId: number,
+      petid: number,
+      petname: string,
+      petstate: string,
+      lat: string,
+      lng: string
+   ): Promise<Pet> {
       // Método para actualizar los datos de una mascota.
 
       // Se busca al usuario que está actualmente autenticado,
