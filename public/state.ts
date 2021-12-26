@@ -1,5 +1,9 @@
+import { setConstantValue } from "typescript";
+
 // const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
 const API_BASE_URL = "http://localhost:3000";
+
+type menustate = "active" | "inactive";
 
 export const state = {
    data: {
@@ -21,6 +25,13 @@ export const state = {
       this.data = newData;
       localStorage.setItem("data", JSON.stringify(newData));
       console.log("State updated", this.data);
+   },
+
+   menuState(menuState: menustate) {
+      this.setState({
+         ...this.data,
+         menuState,
+      });
    },
 
    addCurrentUbication(lat, lng): void {
@@ -153,6 +164,6 @@ export const state = {
          }),
       });
 
-      return resReportPet;
+      return resReportPet.json();
    },
 };

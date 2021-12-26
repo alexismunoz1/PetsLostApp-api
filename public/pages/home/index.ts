@@ -4,48 +4,19 @@ import { state } from "../../state";
 class initHomePage extends HTMLElement {
    connectedCallback() {
       this.render();
-      this.getCurrentUbication();
    }
    render(): void {
       this.innerHTML = `
-      <h1>Home page</h1>
-      <button-comp class="button-data">Mis datos</button-comp>
-      <div class="cont__user-data"" style="display: none;">
-         <p class="user-fullname"></p>
-         <p class="user-email"></p>
-      </div>
-      <button-comp class="button-report">Reportar mascotas</button-comp>
+         <h1 class="home__title">Mascotas perdidas cerca tuyo</h1>
+         <p class="home__parrafo">Para ver las mascotas reportadas cerca tuyo 
+            necesitamos permiso para conocer tu ubicación.</p>
+         <button-comp class="button-ubication" fondo="tipo-rosa">Dar mi ubicación</button-comp>
       `;
+      this.classList.add("home");
 
-      const contUserData: any = this.querySelector(".cont__user-data");
-      const userFullname: any = this.querySelector(".user-fullname");
-      const userEmail = this.querySelector(".user-email");
-      const buttonData = this.querySelector(".button-data");
-      const buttonReport = this.querySelector(".button-report");
-
+      const buttonReport = this.querySelector(".button-ubication");
       buttonReport.addEventListener("click", () => {
-         const currentState = state.getState();
-
-         if (currentState.user.token) {
-            Router.go("/report-pet");
-         } else {
-            Router.go("/verify-email");
-         }
-      });
-
-      buttonData.addEventListener("click", () => {
-         const currentState = state.getState();
-         const token = currentState.user.token;
-
-         if (token) {
-            state.geDatatUser(token).then((data) => {
-               userFullname.textContent = `Fullname:${currentState.user.fullname}`;
-               userEmail.textContent = `Email:${currentState.user.email}`;
-               contUserData.style.display = "block";
-            });
-         } else {
-            Router.go("/verify-email");
-         }
+         this.getCurrentUbication();
       });
    }
 

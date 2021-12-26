@@ -20,10 +20,10 @@ class initReportPage extends HTMLElement {
                <button-comp class="dropzone-button">Agregar/modifiar imagen</button-comp>
             <button-comp class="report-button">Reportar</button-comp>
         </form>
-      `;
+        `;
 
       const formReport: HTMLFormElement = this.querySelector(".report-form");
-      let petNameInput: HTMLInputElement = this.querySelector(".input-petname");
+      const petNameInput: HTMLInputElement = this.querySelector(".input-petname");
       const dropzoneImgBtn: Element = this.querySelector(".dropzone-img");
       const dropzoneButton: Element = this.querySelector(".dropzone-button");
       const buttonReport: Element = this.querySelector(".report-button");
@@ -31,13 +31,14 @@ class initReportPage extends HTMLElement {
 
       const currentState = state.getState();
 
-      let currentLat, currentLng;
-      // Si no hay una ubicación guardada en el state,
-      // se usa esta ubicación por defecto
+      // Ubicacion por defecto del centro geografico de Argentina
       let defaultLat = -34.8403116;
       let defaultLng = -64.5965932;
+      let currentLat, currentLng;
 
       if (!currentState.user.lat && !currentState.user.lng) {
+         // Si no hay una ubicación guardada en el state,
+         // se usa la ubicación por defecto
          currentLat = defaultLat;
          currentLng = defaultLng;
       } else if (currentState.user.lat && currentState.user.lng) {
@@ -67,7 +68,7 @@ class initReportPage extends HTMLElement {
          // Evento de arrastre del marker para actualizar la ubicación
          markerMap.on("dragend", () => {
             const { lng, lat } = markerMap.getLngLat();
-            console.log("lnglat !!", lng, lat);
+            // Se guarda la ubicación actual del marker en el state
             state.currentMarkerPosition(lat, lng);
          });
       });
@@ -75,6 +76,7 @@ class initReportPage extends HTMLElement {
       // Inicializar Dropzone para subir imagen
       let pictureImage;
       const dropPrueba = dropzoneUpload(dropzoneImgBtn);
+
       dropPrueba.then((dropzone) => {
          dropzone.on("addedfile", (file) => {
             pictureImage = file.dataURL;

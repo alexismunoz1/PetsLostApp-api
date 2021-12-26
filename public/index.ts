@@ -11,6 +11,7 @@ import "./pages/report-pet/index";
 // Components
 import "./components/input/";
 import "./components/button";
+import "./components/header";
 
 (function main() {
    const rootEl = document.querySelector(".root");
