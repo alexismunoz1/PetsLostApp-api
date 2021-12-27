@@ -8,10 +8,9 @@ class initHomePage extends HTMLElement {
    render(): void {
       this.innerHTML = `
          <h1 class="home__title">Mascotas perdidas cerca tuyo</h1>
-         <p class="home__parrafo">Para ver las mascotas reportadas cerca tuyo 
+         <p class="home__text">Para ver las mascotas reportadas cerca tuyo 
             necesitamos permiso para conocer tu ubicación.</p>
-         <button-comp class="button-ubication" fondo="tipo-rosa">Dar mi ubicación</button-comp>
-      `;
+         <button-comp class="button-ubication" fondo="tipo-rosa">Dar mi ubicación</button-comp>`;
       this.classList.add("home");
 
       const buttonReport = this.querySelector(".button-ubication");

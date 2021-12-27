@@ -1,9 +1,5 @@
-import { setConstantValue } from "typescript";
-
-// const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
+// const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com" || "http://localhost:3000";
 const API_BASE_URL = "http://localhost:3000";
-
-type menustate = "active" | "inactive";
 
 export const state = {
    data: {
@@ -11,9 +7,9 @@ export const state = {
    },
 
    initLocalStorage() {
-      const data = localStorage.getItem("data");
-      if (data) {
-         this.data = JSON.parse(data);
+      const token = localStorage.getItem("token");
+      if (token) {
+         this.geUserDatatBytoken(token);
       }
    },
 
@@ -23,15 +19,7 @@ export const state = {
 
    setState(newData): void {
       this.data = newData;
-      localStorage.setItem("data", JSON.stringify(newData));
       console.log("State updated", this.data);
-   },
-
-   menuState(menuState: menustate) {
-      this.setState({
-         ...this.data,
-         menuState,
-      });
    },
 
    addCurrentUbication(lat, lng): void {
@@ -53,18 +41,21 @@ export const state = {
          }),
       });
 
+      const resVerifyEmailData = await resVerifyEmail.json();
+
       this.setState({
          ...currentState,
          user: {
             ...currentState.user,
             email: email,
+            fullname: resVerifyEmailData.fullname,
          },
       });
 
       return resVerifyEmail;
    },
 
-   async singup(fullname: string, password: string): Promise<Response> {
+   async singup(fullname: string, email: string, password: string): Promise<Response> {
       const currentState = this.getState();
       const currentEmail: string = currentState.user.email;
 
@@ -75,7 +66,7 @@ export const state = {
          },
          body: JSON.stringify({
             fullname,
-            email: currentEmail,
+            email,
             password,
          }),
       });
@@ -115,10 +106,12 @@ export const state = {
          },
       });
 
+      localStorage.setItem("token", token);
+
       return resToken;
    },
 
-   async geDatatUser(token: string): Promise<any> {
+   async geUserDatatBytoken(token: string): Promise<any> {
       const currentState = this.getState();
 
       const resDataUser = await fetch(`${API_BASE_URL}/me`, {
@@ -129,9 +122,17 @@ export const state = {
          },
       });
 
-      const user = await resDataUser.json();
+      const dataUser = await resDataUser.json();
 
-      return resDataUser;
+      this.setState({
+         ...currentState,
+         user: {
+            ...currentState.user,
+            fullname: dataUser.fullname,
+            email: dataUser.email,
+            token: token,
+         },
+      });
    },
 
    async currentMarkerPosition(lat, lng): Promise<any> {

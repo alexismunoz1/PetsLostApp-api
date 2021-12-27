@@ -3,3 +3,7 @@
    padding: 0;
    box-sizing: border-box;
 }
+
+.root {
+   margin-top: 70px;
+}

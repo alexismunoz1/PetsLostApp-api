@@ -1,0 +1,31 @@
+.mydata-page {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.mydata__title {
+   margin: 30px;
+   font-family: "Poppins";
+   font-weight: bold;
+   text-align: center;
+   font-size: 40px;
+   line-height: 60px;
+   color: #000000;
+}
+
+.mydata__input-name {
+   margin-bottom: 15px;
+}
+
+.mydata__input-email {
+   margin-bottom: 15px;
+}
+
+.mydata__input-password {
+   margin-bottom: 15px;
+}
+
+.mydata__input-password-confirm {
+   margin-bottom: 25px;
+}

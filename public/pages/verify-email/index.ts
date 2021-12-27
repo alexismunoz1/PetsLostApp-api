@@ -6,28 +6,32 @@ class initHomePage extends HTMLElement {
       this.render();
    }
    render(): void {
-      const currentState = state.getState();
-
       this.innerHTML = `
-            <h1>Welcome</h1>
-            <form class="welcome-form">
-               <input-comp class="input-email">Email</input-comp>
-               <button-comp class="button-next">Siguiente</button-comp>
-            </form>
-        `;
+            <h1 class="verify__title">Ingresar</h1>
+            <input-comp class="verify__input-email" label="email">Email</input-comp>
+            <button-comp class="verify__button-next" fondo="tipo-rosa">Siguiente</button-comp>`;
 
-      const welcomeForm = this.querySelector(".welcome-form");
-      welcomeForm.addEventListener("submit", (e) => {
-         e.preventDefault();
-         const email = this.querySelector(".input-email")
-            .shadowRoot.querySelector("input")
-            .value.toString();
+      this.classList.add("verify-page");
+
+      const buttonNextEl = this.querySelector(".verify__button-next");
+      const inputEmailEl = this.querySelector(".verify__input-email");
+
+      buttonNextEl.addEventListener("click", () => {
+         const email = inputEmailEl.shadowRoot.querySelector("input").value;
+
+         const emailRegex =
+            /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+
+         if (emailRegex.test(email) === false) {
+            return alert("Por favor ingrese un email válido");
+         }
 
          state.verifyEmail(email).then((res) => {
             if (res.status === 200) {
                Router.go("/login");
             } else if (res.status === 404) {
-               Router.go("/singup");
+               const result = window.confirm("El email no existe, desea crear una cuenta?");
+               if (result === true) Router.go("/my-data");
             }
          });
       });

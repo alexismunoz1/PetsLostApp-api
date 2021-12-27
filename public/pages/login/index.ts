@@ -7,27 +7,26 @@ class initLoginPage extends HTMLElement {
    }
    render(): void {
       this.innerHTML = `
-            <h1>Iniciar sesión</h1>
+         <h1 class="login__title">Ingresar</h1>
+         <input-comp class="login__input-password" type="password" label="contraseña">Contraseña</input-comp>
+         <button-comp class="login__button-login" fondo="tipo-rosa">Ingresar</button-comp>`;
 
-            <form class="login__form">
-               <input-comp class="login-password">Contraseña</input-comp>
-               <button-comp class="login__button">Iniciar sesión</button-comp>
-            </form>
-        `;
+      this.classList.add("login-page");
 
-      const formCont = this.querySelector(".login__form");
-      formCont.addEventListener("submit", (event) => {
-         event.preventDefault();
+      const inputPasswordEl = this.querySelector(".login__input-password");
+      const buttonLoginEl = this.querySelector(".login__button-login");
 
-         const password = this.querySelector(".login-password")
-            .shadowRoot.querySelector("input")
-            .value.toString();
+      const currenState = state.getState();
+      const userName = currenState.user.fullname;
+
+      buttonLoginEl.addEventListener("click", () => {
+         const password = inputPasswordEl.shadowRoot.querySelector("input").value;
 
          state.getTokenUser(password).then((res) => {
             if (res.status === 200) {
-               Router.go("/home");
+               Router.go("/my-data");
             } else {
-               alert("Error al iniciar sesión, verifique sus datos");
+               alert(`${userName}, la contraseña es incorrecta`);
             }
          });
       });

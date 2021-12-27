@@ -1,39 +1,50 @@
 class buttonCustomElement extends HTMLElement {
+   shadow: ShadowRoot;
    connectedCallback() {
+      this.shadow = this.attachShadow({ mode: "open" });
       this.render();
    }
 
    render(): void {
+      this.shadow.innerHTML = `
+      <button class="button-comp">${this.textContent}</button>
+      `;
+
       const style = document.createElement("style");
-      const textButton = this.textContent;
-      this.innerHTML = `
-            <button class="button-comp">${textButton}</button>
-        `;
 
       style.textContent = `
-            .tipo-rosa {
+         .button-comp {
+            border-radius: 4px;
+            width: 335px;
+            height: 50px;
+            cursor: pointer;
+            border: none;
+            font-family: Poppins;
+            font-weight: bold;
+            font-size: 16px;
+            color: #000000;
+         }`;
+
+      const fondo = this.getAttribute("fondo");
+
+      if (fondo === "tipo-rosa") {
+         style.textContent += `
+            .button-comp {
                background: #FF9DF5;
-            }
-            
-            .tipo-verde {
+            }`;
+      } else if (fondo === "tipo-verde") {
+         style.textContent += `
+            .button-comp {
                background: #97EA9F;
-            }
-            
-            .tipo-gris {
+            }`;
+      } else if (fondo === "tipo-gris") {
+         style.textContent += `
+            .button-comp {
                background: #CDCDCD;
             }`;
-
-      const backgroundColor = this.getAttribute("fondo");
-
-      if (backgroundColor === "tipo-rosa") {
-         this.querySelector(".button-comp").classList.add("tipo-rosa");
-      } else if (backgroundColor === "tipo-verde") {
-         this.querySelector(".button-comp").classList.add("tipo-verde");
-      } else if (backgroundColor === "tipo-gris") {
-         this.querySelector(".button-comp").classList.add("tipo-gris");
       }
 
-      this.appendChild(style);
+      this.shadow.appendChild(style);
    }
 }
 customElements.define("button-comp", buttonCustomElement);

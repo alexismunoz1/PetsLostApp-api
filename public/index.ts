@@ -3,6 +3,7 @@ import { state } from "./state";
 
 // Pages
 import "./pages/home/index";
+import "./pages/mydata/index";
 import "./pages/verify-email/index";
 import "./pages/login/index";
 import "./pages/singup/index";
@@ -16,5 +17,4 @@ import "./components/header";
 (function main() {
    const rootEl = document.querySelector(".root");
    initRouter(rootEl);
-   state.initLocalStorage();
 })();

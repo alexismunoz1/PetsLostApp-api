@@ -108,7 +108,7 @@ app.post("/me/pets", authMiddlewares, async (req, res) => {
    const userId = req["_user"].id;
    const { petname, lat, lng, petimage } = req.body;
 
-   const imageUri = await uploadImageCloudinary(petimage);
+   const imageUrl = await uploadImageCloudinary(petimage);
    const pet = await petController.createNewLostPet(userId, petname, lat, lng);
 
    if (pet) {
