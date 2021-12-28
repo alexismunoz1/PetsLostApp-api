@@ -5,8 +5,8 @@ export function initRouter(rootEl: Element) {
    router.setRoutes([
       { path: "/home", component: "home-page" },
       { path: "/my-data", component: "my-data-page" },
-      { path: "/login", component: "login-page" },
       { path: "/verify-email", component: "verify-email-page" },
+      { path: "/login", component: "login-page" },
       { path: "/report-pet", component: "report-pet-page" },
    ]);
 
