@@ -50,10 +50,10 @@ class headerCustomElement extends HTMLElement {
             </div>
          </div>`;
 
-      const menuToggleEl = document.querySelector(".hamburger-menu");
-      const menuEl = document.querySelector(".home__menu");
-      const logoEl = document.querySelector(".header-comp__logo");
-      const textEl = document.querySelectorAll(".home__menu-text");
+      const menuToggleEl = this.querySelector(".hamburger-menu");
+      const menuEl = this.querySelector(".home__menu");
+      const logoEl = this.querySelector(".header-comp__logo");
+      const textEl = this.querySelectorAll(".home__menu-text");
 
       logoEl.addEventListener("click", () => {
          Router.go("/home");
