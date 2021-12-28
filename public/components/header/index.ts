@@ -7,11 +7,7 @@ const logo = require("../../assets/logo.svg");
 class headerCustomElement extends HTMLElement {
    connectedCallback() {
       state.subscribe(() => {
-         const currentState = state.getState();
-
-         if (currentState.user.email) {
-            this.render();
-         }
+         this.render();
       });
       this.render();
    }
@@ -25,7 +21,7 @@ class headerCustomElement extends HTMLElement {
          closeSession = "Cerrar sesión";
       } else {
          email = "";
-         closeSession = "";
+         closeSession = "Iniciar sesión";
       }
 
       this.innerHTML = `
@@ -53,7 +49,6 @@ class headerCustomElement extends HTMLElement {
       const menuToggleEl = this.querySelector(".hamburger-menu");
       const menuEl = this.querySelector(".home__menu");
       const logoEl = this.querySelector(".header-comp__logo");
-      const textEl = this.querySelectorAll(".home__menu-text");
 
       logoEl.addEventListener("click", () => {
          Router.go("/home");
@@ -64,6 +59,7 @@ class headerCustomElement extends HTMLElement {
          menuEl.classList.toggle("active");
       });
 
+      const textEl = this.querySelectorAll(".home__menu-text");
       textEl.forEach((element) => {
          element.addEventListener("click", (e) => {
             menuToggleEl.classList.toggle("active");
@@ -72,15 +68,32 @@ class headerCustomElement extends HTMLElement {
       });
 
       const misDatosEl = document.querySelector(".mis-datos");
-      const misMascotasEl = document.querySelector(".mis-mascotas");
-      const reportarMascotaEl = document.querySelector(".reportar-mascota");
-
       misDatosEl.addEventListener("click", () => {
          const currentState = state.getState();
 
          if (currentState.user.token) {
             Router.go("/my-data");
          } else {
+            Router.go("/verify-email");
+         }
+      });
+
+      const misMascotasEl = document.querySelector(".mis-mascotas");
+      const reportarMascotaEl = document.querySelector(".reportar-mascota");
+
+      const singOffEl = this.querySelector(".home__menu-sign-off");
+      console.log(singOffEl.textContent);
+      singOffEl.addEventListener("click", () => {
+         if (singOffEl.textContent === "Cerrar sesión") {
+            state.setState({
+               ...currentState,
+               user: {},
+            });
+            state.clearLocalStorage();
+            Router.go("/home");
+         } else if (singOffEl.textContent === "Iniciar sesión") {
+            menuToggleEl.classList.toggle("active");
+            menuEl.classList.toggle("active");
             Router.go("/verify-email");
          }
       });

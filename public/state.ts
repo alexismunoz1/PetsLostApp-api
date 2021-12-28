@@ -46,6 +46,10 @@ export const state = {
       localStorage.setItem("dataUser", JSON.stringify(dataUser));
    },
 
+   clearLocalStorage(): void {
+      localStorage.removeItem("dataUser");
+   },
+
    addCurrentUbication(lat, lng): void {
       const currentState = this.getState();
       currentState.user.lat = lat;
