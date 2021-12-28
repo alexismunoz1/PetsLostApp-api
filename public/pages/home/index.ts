@@ -7,11 +7,12 @@ class initHomePage extends HTMLElement {
    }
    render(): void {
       this.innerHTML = `
-         <h1 class="home__title">Mascotas perdidas cerca tuyo</h1>
-         <p class="home__text">Para ver las mascotas reportadas cerca tuyo 
+         <header-comp></header-comp>
+         <h1 class="home-page__title">Mascotas perdidas cerca tuyo</h1>
+         <p class="home-page__text">Para ver las mascotas reportadas cerca tuyo 
             necesitamos permiso para conocer tu ubicación.</p>
          <button-comp class="button-ubication" fondo="tipo-rosa">Dar mi ubicación</button-comp>`;
-      this.classList.add("home");
+      this.classList.add("home-page");
 
       const buttonReport = this.querySelector(".button-ubication");
       buttonReport.addEventListener("click", () => {

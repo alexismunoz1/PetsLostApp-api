@@ -7,6 +7,7 @@ class initHomePage extends HTMLElement {
    }
    render(): void {
       this.innerHTML = `
+            <header-comp></header-comp>
             <h1 class="verify__title">Ingresar</h1>
             <input-comp class="verify__input-email" label="email">Email</input-comp>
             <button-comp class="verify__button-next" fondo="tipo-rosa">Siguiente</button-comp>`;

@@ -7,9 +7,19 @@ export const state = {
    },
 
    initLocalStorage() {
-      const token = localStorage.getItem("token");
-      if (token) {
-         this.geUserDatatBytoken(token);
+      const dataUser = JSON.parse(localStorage.getItem("dataUser"));
+      const currentState = state.getState();
+
+      if (dataUser) {
+         this.setState({
+            ...currentState,
+            user: {
+               ...currentState.user,
+               fullname: dataUser.fullname,
+               email: dataUser.email,
+               token: dataUser.token,
+            },
+         });
       }
    },
 
@@ -19,7 +29,13 @@ export const state = {
 
    setState(newData): void {
       this.data = newData;
+      this.setUserDataLocalStorage();
       console.log("State updated", this.data);
+   },
+
+   async setUserDataLocalStorage() {
+      const dataUser = this.getState().user;
+      localStorage.setItem("dataUser", JSON.stringify(dataUser));
    },
 
    addCurrentUbication(lat, lng): void {
@@ -82,7 +98,7 @@ export const state = {
       return resSingupOrLogin;
    },
 
-   async getTokenUser(password: string): Promise<any> {
+   async getTokenUser(password: string): Promise<Response> {
       const currentState = this.getState();
 
       const resToken = await fetch(`${API_BASE_URL}/auth/token`, {
@@ -106,12 +122,10 @@ export const state = {
          },
       });
 
-      localStorage.setItem("token", token);
-
       return resToken;
    },
 
-   async geUserDatatBytoken(token: string): Promise<any> {
+   async geUserDatatBytoken(token: string): Promise<Response> {
       const currentState = this.getState();
 
       const resDataUser = await fetch(`${API_BASE_URL}/me`, {
@@ -124,7 +138,7 @@ export const state = {
 
       const dataUser = await resDataUser.json();
 
-      this.setState({
+      return this.setState({
          ...currentState,
          user: {
             ...currentState.user,
@@ -135,7 +149,7 @@ export const state = {
       });
    },
 
-   async currentMarkerPosition(lat, lng): Promise<any> {
+   currentMarkerPosition(lat, lng): void {
       const currentState = this.getState();
       state.setState({
          ...currentState,
@@ -147,7 +161,7 @@ export const state = {
       });
    },
 
-   async addPet(petname: string, lat, lng, petimage): Promise<any> {
+   async addPet(petname: string, lat, lng, petimage): Promise<Response> {
       const currentState = this.getState();
       const token = currentState.user.token;
 

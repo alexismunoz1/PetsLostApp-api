@@ -1,5 +1,6 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
+// import "./index.css";
 
 const logo = require("../../assets/logo.svg");
 
@@ -12,7 +13,6 @@ class headerCustomElement extends HTMLElement {
       const currentState = state.getState();
       let email = "";
       let closeSession = "";
-      console.log(currentState);
 
       if (currentState.user.email) {
          email = currentState.user.email;
@@ -49,11 +49,13 @@ class headerCustomElement extends HTMLElement {
 
       logoEl.addEventListener("click", () => {
          Router.go("/home");
+         console.log("click");
       });
 
       menuToggleEl.addEventListener("click", () => {
          menuToggleEl.classList.toggle("active");
          menuEl.classList.toggle("active");
+         console.log("click");
       });
 
       textEl.forEach((element) => {

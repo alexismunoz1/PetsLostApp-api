@@ -4,10 +4,21 @@ export const userController = {
    async createUser(fullname: string, email: string): Promise<User> {
       // Método para crear un nuevo usuario.
       try {
-         return await User.create({
-            fullname,
-            email,
+         const [user, created] = await User.findOrCreate({
+            where: {
+               email: email,
+            },
+            defaults: {
+               fullname: fullname,
+               email: email,
+            },
          });
+
+         return user;
+         // return await User.create({
+         //    fullname,
+         //    email,
+         // });
       } catch (error) {
          throw new Error(error);
       }
