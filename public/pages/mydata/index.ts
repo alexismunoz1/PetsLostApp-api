@@ -14,7 +14,6 @@ class initMyDataPage extends HTMLElement {
       if (currenState.user.email) userEmail = currenState.user.email;
 
       this.innerHTML = `
-            <header-comp></header-comp>
             <h1 class="mydata__title">Mis datos</h1>
             
             <input-comp class="mydata__input-name" label="nombre" value="${userName}"></input-comp>

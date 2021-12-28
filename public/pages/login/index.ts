@@ -7,7 +7,6 @@ class initLoginPage extends HTMLElement {
    }
    render(): void {
       this.innerHTML = `
-         <header-comp></header-comp>
          <h1 class="login__title">Ingresar</h1>
          <input-comp class="login__input-password" type="password" label="contraseña">Contraseña</input-comp>
          <button-comp class="login__button-login" fondo="tipo-rosa">Ingresar</button-comp>`;

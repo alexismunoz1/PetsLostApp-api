@@ -5,6 +5,8 @@ export const state = {
       user: {},
    },
 
+   listeners: [],
+
    initLocalStorage() {
       const dataUser = JSON.parse(localStorage.getItem("dataUser"));
       const currentState = state.getState();
@@ -29,10 +31,17 @@ export const state = {
    setState(newData): void {
       this.data = newData;
       this.setUserDataLocalStorage();
+      for (const cb of this.listeners) {
+         cb();
+      }
       console.log("State updated", this.data);
    },
 
-   async setUserDataLocalStorage() {
+   subscribe(callback: (any) => any): void {
+      this.listeners.push(callback);
+   },
+
+   setUserDataLocalStorage(): void {
       const dataUser = this.getState().user;
       localStorage.setItem("dataUser", JSON.stringify(dataUser));
    },

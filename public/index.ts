@@ -14,7 +14,7 @@ import "./pages/login/index";
 import "./pages/report-pet/index";
 
 (function main() {
+   state.initLocalStorage();
    const rootEl = document.querySelector(".root");
    initRouter(rootEl);
-   state.initLocalStorage();
 })();

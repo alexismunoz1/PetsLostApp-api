@@ -7,7 +7,6 @@ class initHomePage extends HTMLElement {
    }
    render(): void {
       this.innerHTML = `
-         <header-comp></header-comp>
          <h1 class="home-page__title">Mascotas perdidas cerca tuyo</h1>
          <p class="home-page__text">Para ver las mascotas reportadas cerca tuyo 
             necesitamos permiso para conocer tu ubicación.</p>

@@ -6,17 +6,26 @@ const logo = require("../../assets/logo.svg");
 
 class headerCustomElement extends HTMLElement {
    connectedCallback() {
+      state.subscribe(() => {
+         const currentState = state.getState();
+
+         if (currentState.user.email) {
+            this.render();
+         }
+      });
       this.render();
    }
 
    render(): void {
       const currentState = state.getState();
-      let email = "";
-      let closeSession = "";
+      let email, closeSession: string;
 
       if (currentState.user.email) {
          email = currentState.user.email;
          closeSession = "Cerrar sesión";
+      } else {
+         email = "";
+         closeSession = "";
       }
 
       this.innerHTML = `
@@ -39,8 +48,7 @@ class headerCustomElement extends HTMLElement {
                <p class="home__menu-email">${email}</p>
                <p class="home__menu-sign-off">${closeSession}</p>
             </div>
-         </div>
-        `;
+         </div>`;
 
       const menuToggleEl = document.querySelector(".hamburger-menu");
       const menuEl = document.querySelector(".home__menu");
@@ -49,13 +57,11 @@ class headerCustomElement extends HTMLElement {
 
       logoEl.addEventListener("click", () => {
          Router.go("/home");
-         console.log("click");
       });
 
       menuToggleEl.addEventListener("click", () => {
          menuToggleEl.classList.toggle("active");
          menuEl.classList.toggle("active");
-         console.log("click");
       });
 
       textEl.forEach((element) => {
