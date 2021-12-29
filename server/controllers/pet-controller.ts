@@ -1,7 +1,7 @@
 import { Pet, User } from "../models/index";
 
 export const petController = {
-   async createNewLostPet(userId: number, petname: string, lat: string, lng: string): Promise<Pet> {
+   async createNewLostPet(userId: number, petname: string, lat: string, lng: string, petimage): Promise<Pet> {
       // Método para crear una mascota.
       const defaultPetState: string = "lost";
       const pet: Pet = await Pet.create({
@@ -9,6 +9,7 @@ export const petController = {
          petstate: defaultPetState,
          lat,
          lng,
+         petimage,
          userId,
       });
 
@@ -21,7 +22,8 @@ export const petController = {
       petname: string,
       petstate: string,
       lat: string,
-      lng: string
+      lng: string,
+      petimage
    ): Promise<Pet> {
       // Método para actualizar los datos de una mascota.
 
@@ -39,6 +41,7 @@ export const petController = {
             petstate,
             lat,
             lng,
+            petimage,
          });
 
          return pet;

@@ -1,0 +1,56 @@
+.report-page {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.report__title {
+   margin: 30px 10px 50px 10px;
+   font-family: "Poppins";
+   font-weight: bold;
+   text-align: center;
+   font-size: 40px;
+   line-height: 60px;
+   color: #000000;
+   max-width: 379px;
+}
+
+.report__input-petname {
+}
+
+.report__dropzone-img {
+   max-height: 142px;
+   margin: 50px 0 20px 0;
+}
+
+.report__dropzone-button {
+}
+
+.report__content-mapbox {
+   margin: 50px 0 20px 0;
+}
+
+.report__input-mapbox {
+}
+
+.report__button-mapbox {
+   margin: 20px 0 20px 0;
+}
+
+.report__text {
+   text-align: center;
+   font-family: Poppins;
+   font-weight: 500;
+   font-size: 16px;
+   text-transform: uppercase;
+   color: #000000;
+   max-width: 379px;
+}
+
+.report__save-button {
+   margin: 45px 0 20px 0;
+}
+
+.report__cancel-button {
+   margin-bottom: 50px;
+}

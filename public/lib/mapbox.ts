@@ -7,7 +7,7 @@ const mapboxClient = new MapboxClient(MAPBOX_TOKEN);
 
 export async function initMapMapbox(mapElement, lat, lng) {
    mapboxgl.accessToken = MAPBOX_TOKEN;
-   return new mapboxgl.Map({
+   return await new mapboxgl.Map({
       container: mapElement,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [lng, lat],
@@ -15,19 +15,16 @@ export async function initMapMapbox(mapElement, lat, lng) {
    });
 }
 
-export async function initSearchFormMapbox(formElement, callback) {
-   formElement.addEventListener("submit", (e) => {
-      e.preventDefault();
-      mapboxClient.geocodeForward(
-         e.target.geoloc.value,
-         {
-            country: "ar",
-            autocomplete: true,
-            language: "es",
-         },
-         function (err, data, res) {
-            if (!err) callback(data.features);
-         }
-      );
-   });
+export async function initSearchFormMapbox(mapboxInput, callback) {
+   await mapboxClient.geocodeForward(
+      mapboxInput,
+      {
+         country: "ar",
+         autocomplete: true,
+         language: "es",
+      },
+      function (err, data, res) {
+         if (!err) callback(data.features);
+      }
+   );
 }

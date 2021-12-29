@@ -4,6 +4,7 @@ import * as mapboxgl from "mapbox-gl";
 import { initMapMapbox, initSearchFormMapbox } from "../../lib/mapbox";
 import { dropzoneUpload } from "../../lib/dropzone";
 const defaultImg = require("../../assets/default-img.png");
+const defaultImg2 = require("../../assets/default-img2.png");
 
 class initReportPage extends HTMLElement {
    connectedCallback() {
@@ -11,23 +12,50 @@ class initReportPage extends HTMLElement {
    }
    render(): void {
       this.innerHTML = `
-        <h1>Reportar mascotas</h1>
-        <form class="report-form">
-               <input class="input-petname" type="text" name="name" placeholder="Nombre de la mascota" required>
-               <input type="text" name="geoloc" placeholder="Ingresa tu ubicación" />
-               <div class="content-mapbox" style="width: 335px; height: 335px"></div>
-               <img class="dropzone-img" src="${defaultImg}" crossorigin="anonymous">
-               <button-comp class="dropzone-button">Agregar/modifiar imagen</button-comp>
-            <button-comp class="report-button">Reportar</button-comp>
-        </form>
-        `;
+         <h1 class="report__title">Reportar mascota perdida</h1>
+        
+         <input-comp class="report__input-petname" label="nombre de la mascota"></input-comp>
 
-      const formReport: HTMLFormElement = this.querySelector(".report-form");
-      const petNameInput: HTMLInputElement = this.querySelector(".input-petname");
-      const dropzoneImgBtn: Element = this.querySelector(".dropzone-img");
-      const dropzoneButton: Element = this.querySelector(".dropzone-button");
-      const buttonReport: Element = this.querySelector(".report-button");
-      const mapElement = this.querySelector(".content-mapbox");
+         <img class="report__dropzone-img" src="${defaultImg}" crossorigin="anonymous">
+         <button-comp class="report__dropzone-button" fondo="tipo-verde">Agregar/modifiar imagen</button-comp>
+
+         <div class="report__content-mapbox" style="width: 335px; height: 335px"></div>
+         <input-comp class="report__input-mapbox" type="text" name="geoloc" label="Ubicación"></input-comp>
+         <button-comp class="report__button-mapbox" fondo="tipo-verde">Buscar</button-comp>
+
+         <p class="report__text">Buscá un punto de referencia para reportar a tu mascota. 
+            Puede ser una dirección, un barrio o una ciudad.</p> 
+
+         <button-comp class="report__save-button" fondo="tipo-rosa">Reportar</button-comp>
+         <button-comp class="report__cancel-button" fondo="tipo-gris">Cancelar</button-comp>`;
+
+      this.classList.add("report-page");
+
+      const petNameInput: HTMLInputElement = this.querySelector(".report__input-petname");
+      const dropzoneImage: any = this.querySelector(".report__dropzone-img");
+      const dropzoneButton = this.querySelector(".report__dropzone-button");
+      const buttonReport = this.querySelector(".report__save-button");
+
+      const mapElement = this.querySelector(".report__content-mapbox");
+      const mapboxInputEl = this.querySelector(".report__input-mapbox");
+      const mapboxButtonEl = this.querySelector(".report__button-mapbox");
+
+      // Inicializar Dropzone para subir imagen
+      let pictureImage;
+      const dropzoneInit = dropzoneUpload(dropzoneImage, dropzoneButton);
+
+      dropzoneInit.then((dropzone) => {
+         dropzone.on("thumbnail", (file) => {
+            dropzoneImage.src = file.dataURL;
+            pictureImage = file.dataURL;
+
+            // Si la imagen es muy grande, la reduzco
+            if (file.width > 300) {
+               dropzone.options.resizeWidth = 300;
+            }
+         });
+         dropzone.processQueue();
+      });
 
       const currentState = state.getState();
 
@@ -55,14 +83,24 @@ class initReportPage extends HTMLElement {
          markerMap.setLngLat([currentLng, currentLat]).addTo(map);
 
          // Inicializar el formulario de busqueda de direcciones
-         initSearchFormMapbox(formReport, function (results) {
-            // Obtener las cordenadas del primer resultado de la busqueda
-            const firstResult = results[0];
-            const [lng, lat] = firstResult.geometry.coordinates;
 
-            markerMap.setLngLat([lng, lat]).addTo(map);
-            map.setCenter([lng, lat]);
-            map.setZoom(14);
+         mapboxButtonEl.addEventListener("click", () => {
+            // Obtener la direccion ingresada por el usuario
+            const mapboxInputValue = mapboxInputEl.shadowRoot.querySelector("input").value;
+
+            if (mapboxInputValue === null || mapboxInputValue === "") {
+               alert("Ingrese una dirección válida");
+            } else {
+               initSearchFormMapbox(mapboxInputValue, function (results) {
+                  // Obtener las cordenadas del primer resultado de la busqueda
+                  const firstResult = results[0];
+                  const [lng, lat] = firstResult.geometry.coordinates;
+
+                  markerMap.setLngLat([lng, lat]).addTo(map);
+                  map.setCenter([lng, lat]);
+                  map.setZoom(14);
+               });
+            }
          });
 
          // Evento de arrastre del marker para actualizar la ubicación
@@ -73,21 +111,13 @@ class initReportPage extends HTMLElement {
          });
       });
 
-      // Inicializar Dropzone para subir imagen
-      let pictureImage;
-      const dropPrueba = dropzoneUpload(dropzoneImgBtn);
-
-      dropPrueba.then((dropzone) => {
-         dropzone.on("addedfile", (file) => {
-            pictureImage = file.dataURL;
-         });
-      });
-
       buttonReport.addEventListener("click", (e) => {
-         e.preventDefault();
-         let lat = currentState.user.currentMarkerLat;
-         let lng = currentState.user.currentMarkerLng;
-         let petname = petNameInput.value;
+         const cs = state.getState();
+         const user = cs.user;
+
+         let lat = user.currentMarkerLat;
+         let lng = user.currentMarkerLng;
+         let petname = petNameInput.shadowRoot.querySelector("input").value;
 
          state.addPet(petname, lat, lng, pictureImage).then((res) => {
             console.log(res);

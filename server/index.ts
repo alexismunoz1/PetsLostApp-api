@@ -109,7 +109,7 @@ app.post("/me/pets", authMiddlewares, async (req, res) => {
    const { petname, lat, lng, petimage } = req.body;
 
    const imageUrl = await uploadImageCloudinary(petimage);
-   const pet = await petController.createNewLostPet(userId, petname, lat, lng);
+   const pet = await petController.createNewLostPet(userId, petname, lat, lng, imageUrl);
 
    if (pet) {
       const petInAlgolia = await algoliaController.addPetInAlgolia(pet);
@@ -124,11 +124,11 @@ app.post("/me/pets", authMiddlewares, async (req, res) => {
 app.put("/me/pets", authMiddlewares, async (req, res) => {
    // Endpoint para actualizar los datos de una mascota
    const userId = req["_user"].id;
-   const { petid, petname, petstate, lat, lng } = req.body;
+   const { petid, petname, petstate, lat, lng, petimage } = req.body;
 
-   // const imageUri = await cloudinaryController.uploadImageCloudinary(petimage);
+   const imageUrl = await uploadImageCloudinary(petimage);
 
-   const pet = await petController.updatePet(userId, petid, petname, petstate, lat, lng);
+   const pet = await petController.updatePet(userId, petid, petname, petstate, lat, lng, imageUrl);
 
    if (pet) {
       const updatePetInAlgolia = await algoliaController.updatePetInAlgolia(pet);

@@ -67,7 +67,7 @@ class headerCustomElement extends HTMLElement {
          });
       });
 
-      const misDatosEl = document.querySelector(".mis-datos");
+      const misDatosEl = this.querySelector(".mis-datos");
       misDatosEl.addEventListener("click", () => {
          const currentState = state.getState();
 
@@ -78,11 +78,17 @@ class headerCustomElement extends HTMLElement {
          }
       });
 
-      const misMascotasEl = document.querySelector(".mis-mascotas");
-      const reportarMascotaEl = document.querySelector(".reportar-mascota");
+      const reportarMascotaEl = this.querySelector(".reportar-mascota");
+      reportarMascotaEl.addEventListener("click", () => {
+         if (currentState.user.token) {
+            Router.go("/report-pet");
+         } else {
+            Router.go("/verify-email");
+         }
+      });
+      const misMascotasEl = this.querySelector(".mis-mascotas");
 
       const singOffEl = this.querySelector(".home__menu-sign-off");
-      console.log(singOffEl.textContent);
       singOffEl.addEventListener("click", () => {
          if (singOffEl.textContent === "Cerrar sesión") {
             state.setState({
