@@ -1,6 +1,6 @@
 import { state } from "../../state";
 
-class initMyDataPage extends HTMLElement {
+class InitMyDataPage extends HTMLElement {
    connectedCallback() {
       this.render();
    }
@@ -21,8 +21,7 @@ class initMyDataPage extends HTMLElement {
             <input-comp class="mydata__input-password" type="password" label="contraseña"></input-comp>
             <input-comp class="mydata__input-password-confirm" type="password" label="confirmar contraseña"></input-comp>
             
-            <button-comp class="mydata__button-save" fondo="tipo-rosa">Guardar</button-comp>
-            `;
+            <button-comp class="mydata__button-save" fondo="tipo-rosa">Guardar</button-comp>`;
 
       this.classList.add("mydata-page");
 
@@ -52,7 +51,7 @@ class initMyDataPage extends HTMLElement {
          state.singup(fullname, email, password).then((res) => {
             if (res.status === 200) {
                state.getTokenUser(password);
-               alert(`Bienvenidx ${fullname}!</br> sus datos fueron guardados correctamente`);
+               alert(`Bienvenidx ${fullname}!\nSus datos fueron guardados correctamente`);
             } else {
                alert("Error al crear la cuenta");
             }
@@ -61,4 +60,4 @@ class initMyDataPage extends HTMLElement {
    }
 }
 
-customElements.define("my-data-page", initMyDataPage);
+customElements.define("my-data-page", InitMyDataPage);

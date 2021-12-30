@@ -174,7 +174,7 @@ export const state = {
       });
    },
 
-   async addPet(petname: string, lat, lng, petimage): Promise<Response> {
+   async addPet(petname: string, lat, lng, ubication, petimage): Promise<Response> {
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -188,10 +188,25 @@ export const state = {
             petname,
             lat,
             lng,
+            ubication,
             petimage,
          }),
       });
 
       return resReportPet.json();
+   },
+
+   async getUserPets(): Promise<any> {
+      const currentUser = this.getState().user;
+
+      const pets = await fetch(`${API_BASE_URL}/me/pets`, {
+         method: "GET",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+         },
+      });
+
+      return pets.json();
    },
 };

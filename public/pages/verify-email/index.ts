@@ -1,7 +1,7 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
-class initHomePage extends HTMLElement {
+class InitHomePage extends HTMLElement {
    connectedCallback() {
       this.render();
    }
@@ -37,4 +37,4 @@ class initHomePage extends HTMLElement {
       });
    }
 }
-customElements.define("verify-email-page", initHomePage);
+customElements.define("verify-email-page", InitHomePage);

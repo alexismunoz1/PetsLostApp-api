@@ -1,4 +1,4 @@
-class inputCustomElemente extends HTMLElement {
+class InputCustomElemente extends HTMLElement {
    shadow: ShadowRoot;
    connectedCallback() {
       this.shadow = this.attachShadow({ mode: "open" });
@@ -48,4 +48,4 @@ class inputCustomElemente extends HTMLElement {
       this.shadow.appendChild(style);
    }
 }
-customElements.define("input-comp", inputCustomElemente);
+customElements.define("input-comp", InputCustomElemente);

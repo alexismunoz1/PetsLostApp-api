@@ -1,10 +1,9 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
-// import "./index.css";
 
 const logo = require("../../assets/logo.svg");
 
-class headerCustomElement extends HTMLElement {
+class HeaderCustomElement extends HTMLElement {
    connectedCallback() {
       state.subscribe(() => {
          this.render();
@@ -13,11 +12,11 @@ class headerCustomElement extends HTMLElement {
    }
 
    render(): void {
-      const currentState = state.getState();
+      const currentUser = state.getState().user;
       let email, closeSession: string;
 
-      if (currentState.user.email) {
-         email = currentState.user.email;
+      if (currentUser.email) {
+         email = currentUser.email;
          closeSession = "Cerrar sesión";
       } else {
          email = "";
@@ -80,19 +79,26 @@ class headerCustomElement extends HTMLElement {
 
       const reportarMascotaEl = this.querySelector(".reportar-mascota");
       reportarMascotaEl.addEventListener("click", () => {
-         if (currentState.user.token) {
+         if (currentUser.token) {
             Router.go("/report-pet");
          } else {
             Router.go("/verify-email");
          }
       });
+
       const misMascotasEl = this.querySelector(".mis-mascotas");
+      misMascotasEl.addEventListener("click", () => {
+         if (currentUser.token) {
+            Router.go("/my-pets");
+         } else {
+            Router.go("/verify-email");
+         }
+      });
 
       const singOffEl = this.querySelector(".home__menu-sign-off");
       singOffEl.addEventListener("click", () => {
          if (singOffEl.textContent === "Cerrar sesión") {
             state.setState({
-               ...currentState,
                user: {},
             });
             state.clearLocalStorage();
@@ -105,4 +111,4 @@ class headerCustomElement extends HTMLElement {
       });
    }
 }
-customElements.define("header-comp", headerCustomElement);
+customElements.define("header-comp", HeaderCustomElement);

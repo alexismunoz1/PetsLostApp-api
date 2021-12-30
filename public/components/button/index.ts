@@ -1,4 +1,4 @@
-class buttonCustomElement extends HTMLElement {
+class ButtonCustomElement extends HTMLElement {
    shadow: ShadowRoot;
    connectedCallback() {
       this.shadow = this.attachShadow({ mode: "open" });
@@ -47,4 +47,4 @@ class buttonCustomElement extends HTMLElement {
       this.shadow.appendChild(style);
    }
 }
-customElements.define("button-comp", buttonCustomElement);
+customElements.define("button-comp", ButtonCustomElement);

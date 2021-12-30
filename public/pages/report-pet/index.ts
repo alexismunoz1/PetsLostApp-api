@@ -4,9 +4,8 @@ import * as mapboxgl from "mapbox-gl";
 import { initMapMapbox, initSearchFormMapbox } from "../../lib/mapbox";
 import { dropzoneUpload } from "../../lib/dropzone";
 const defaultImg = require("../../assets/default-img.png");
-const defaultImg2 = require("../../assets/default-img2.png");
 
-class initReportPage extends HTMLElement {
+class InitReportPage extends HTMLElement {
    connectedCallback() {
       this.render();
    }
@@ -20,7 +19,7 @@ class initReportPage extends HTMLElement {
          <button-comp class="report__dropzone-button" fondo="tipo-verde">Agregar/modifiar imagen</button-comp>
 
          <div class="report__content-mapbox" style="width: 335px; height: 335px"></div>
-         <input-comp class="report__input-mapbox" type="text" name="geoloc" label="Ubicación"></input-comp>
+         <input-comp class="report__input-mapbox" type="text" name="geoloc" label="Ciudad/Barrio/Localidad"></input-comp>
          <button-comp class="report__button-mapbox" fondo="tipo-verde">Buscar</button-comp>
 
          <p class="report__text">Buscá un punto de referencia para reportar a tu mascota. 
@@ -82,6 +81,9 @@ class initReportPage extends HTMLElement {
          // inicializar el marker en la ubicación actual del usuario
          markerMap.setLngLat([currentLng, currentLat]).addTo(map);
 
+         const { lng, lat } = markerMap.getLngLat();
+         state.currentMarkerPosition(lat, lng);
+
          // Inicializar el formulario de busqueda de direcciones
 
          mapboxButtonEl.addEventListener("click", () => {
@@ -99,6 +101,7 @@ class initReportPage extends HTMLElement {
                   markerMap.setLngLat([lng, lat]).addTo(map);
                   map.setCenter([lng, lat]);
                   map.setZoom(14);
+                  state.currentMarkerPosition(lat, lng);
                });
             }
          });
@@ -111,19 +114,44 @@ class initReportPage extends HTMLElement {
          });
       });
 
+      // Evento de click en el boton de reportar mascota perdida
       buttonReport.addEventListener("click", (e) => {
-         const cs = state.getState();
-         const user = cs.user;
-
+         const user = state.getState().user;
+         let petname = petNameInput.shadowRoot.querySelector("input").value;
          let lat = user.currentMarkerLat;
          let lng = user.currentMarkerLng;
-         let petname = petNameInput.shadowRoot.querySelector("input").value;
+         const mapboxInputValue = mapboxInputEl.shadowRoot.querySelector("input").value;
 
-         state.addPet(petname, lat, lng, pictureImage).then((res) => {
-            console.log(res);
+         if (!petname || petname === "") {
+            alert("Ingrese un nombre para la mascota");
+         } else if (!mapboxInputValue || mapboxInputValue === "") {
+            alert("Ingrese una Ciudad/Barrio/Localidad");
+         } else if (!pictureImage) {
+            alert("Seleccione una ubicación para la mascota");
+         } else if (!lat || !lng) {
+            alert("Seleccione una imagen para la mascota");
+         } else {
+            state.addPet(petname, lat, lng, mapboxInputValue, pictureImage).then((res) => {
+               console.log(res);
+            });
+            alert("Mascota reportada");
+            Router.go("/my-pets");
+         }
+      });
+
+      // Evento de cancelar el reporte
+      const cancelButton = this.querySelector(".report__cancel-button");
+      cancelButton.addEventListener("click", (e) => {
+         Router.go("/home");
+         state.setState({
+            user: {
+               ...state.getState().user,
+               currentMarkerLat: "",
+               currentMarkerLng: "",
+            },
          });
       });
    }
 }
 
-customElements.define("report-pet-page", initReportPage);
+customElements.define("report-pet-page", InitReportPage);

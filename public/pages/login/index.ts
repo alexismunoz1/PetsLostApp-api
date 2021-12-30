@@ -1,7 +1,7 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
-class initLoginPage extends HTMLElement {
+class InitLoginPage extends HTMLElement {
    connectedCallback() {
       this.render();
    }
@@ -24,7 +24,7 @@ class initLoginPage extends HTMLElement {
 
          state.getTokenUser(password).then((res) => {
             if (res.status === 200) {
-               Router.go("/my-data");
+               Router.go("/home");
             } else {
                alert(`${userName}, la contraseña es incorrecta`);
             }
@@ -32,4 +32,4 @@ class initLoginPage extends HTMLElement {
       });
    }
 }
-customElements.define("login-page", initLoginPage);
+customElements.define("login-page", InitLoginPage);

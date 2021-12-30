@@ -5,13 +5,15 @@ import { state } from "./state";
 import "./components/header";
 import "./components/input/";
 import "./components/button";
+import "./components/pet-card";
 
 // Pages
 import "./pages/home/index";
-import "./pages/mydata/index";
+import "./pages/my-data/index";
 import "./pages/verify-email/index";
 import "./pages/login/index";
 import "./pages/report-pet/index";
+import "./pages/my-pets/index";
 
 (function main() {
    state.initLocalStorage();
