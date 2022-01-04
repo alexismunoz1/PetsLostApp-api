@@ -14,6 +14,7 @@ import "./pages/verify-email/index";
 import "./pages/login/index";
 import "./pages/report-pet/index";
 import "./pages/my-pets/index";
+import "./pages/edit-pet/index";
 
 (function main() {
    state.initLocalStorage();

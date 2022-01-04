@@ -11,6 +11,7 @@ export const petController = {
    ): Promise<Pet> {
       // Método para crear una mascota.
       const defaultPetState: string = "lost";
+
       const pet: Pet = await Pet.create({
          petname,
          petstate: defaultPetState,
@@ -28,7 +29,6 @@ export const petController = {
       userId: number,
       petid: number,
       petname: string,
-      petstate: string,
       lat: string,
       lng: string,
       ubication: string,
@@ -47,11 +47,30 @@ export const petController = {
       if (pet) {
          pet.update({
             petname,
-            petstate,
             lat,
             lng,
             ubication,
             petimage,
+         });
+
+         return pet;
+      } else {
+         return null;
+      }
+   },
+
+   async statePet(userid, petid, petstate) {
+      // Método para actualizar el estado de una mascota.
+      // Si esta perdido "lost", si fue encontrado "found".
+      const pet: Pet = await (
+         await User.findByPk(userid, {
+            include: { model: Pet, where: { id: petid } },
+         })
+      ).get("pets")[0];
+
+      if (pet) {
+         pet.update({
+            petstate,
          });
 
          return pet;
@@ -75,7 +94,22 @@ export const petController = {
       }
    },
 
-   async findPetByName(userId: number, petName: string): Promise<any> {
+   async getPetById(userId, petId): Promise<any> {
+      // Método para obtener una mascota por su id.
+      const pet = await (
+         await User.findByPk(userId, {
+            include: { model: Pet, where: { id: petId } },
+         })
+      ).get("pets");
+
+      if (pet) {
+         return pet;
+      } else {
+         return null;
+      }
+   },
+
+   async getPetByName(userId: number, petName: string): Promise<any> {
       // Método para obtener una mascota por su nombre.
       const pet = await (
          await User.findByPk(userId, {

@@ -23,7 +23,7 @@ class InitReportPage extends HTMLElement {
          <button-comp class="report__button-mapbox" fondo="tipo-verde">Buscar</button-comp>
 
          <p class="report__text">Buscá un punto de referencia para reportar a tu mascota. 
-            Puede ser una dirección, un barrio o una ciudad.</p> 
+            Puede ser una dirección, un barrio o una ciudad.</p>
 
          <button-comp class="report__save-button" fondo="tipo-rosa">Reportar</button-comp>
          <button-comp class="report__cancel-button" fondo="tipo-gris">Cancelar</button-comp>`;
@@ -31,13 +31,15 @@ class InitReportPage extends HTMLElement {
       this.classList.add("report-page");
 
       const petNameInput: HTMLInputElement = this.querySelector(".report__input-petname");
+
       const dropzoneImage: any = this.querySelector(".report__dropzone-img");
       const dropzoneButton = this.querySelector(".report__dropzone-button");
-      const buttonReport = this.querySelector(".report__save-button");
 
       const mapElement = this.querySelector(".report__content-mapbox");
       const mapboxInputEl = this.querySelector(".report__input-mapbox");
       const mapboxButtonEl = this.querySelector(".report__button-mapbox");
+
+      const buttonReport = this.querySelector(".report__save-button");
 
       // Inicializar Dropzone para subir imagen
       let pictureImage;
@@ -131,11 +133,9 @@ class InitReportPage extends HTMLElement {
          } else if (!lat || !lng) {
             alert("Seleccione una imagen para la mascota");
          } else {
-            state.addPet(petname, lat, lng, mapboxInputValue, pictureImage).then((res) => {
-               console.log(res);
-            });
+            state.addPet(petname, lat, lng, mapboxInputValue, pictureImage);
             alert("Mascota reportada");
-            Router.go("/my-pets");
+            Router.go("/home");
          }
       });
 

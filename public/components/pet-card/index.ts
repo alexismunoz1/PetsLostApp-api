@@ -18,6 +18,7 @@ class PetCardCustomElement extends HTMLElement {
                   <div class="pet-card__info">
                      <h2 class="pet-card__name">${this.getAttribute("name")}</h2>
                      <p class="pet-card__ubication">${this.getAttribute("ubication")}</p>
+                     <p class="pet-card__state">${this.getAttribute("state")}</p>
                   </div>
                   <img class="pet-card__icon" src="${iconEdit}">
                </div>
@@ -66,9 +67,28 @@ class PetCardCustomElement extends HTMLElement {
             color: #000000;
          }
 
+         .pet-card__state {
+            font-family: Poppins;
+            font-weight: 500;
+            font-size: 16px;
+            text-transform: uppercase;
+         }
+
          .pet-card__icon {
             cursor: pointer;
          }`;
+
+      if (this.getAttribute("state") === "Perdido") {
+         style.textContent += `
+            .pet-card__state {
+               color: #FF3A3A;
+            }`;
+      } else if (this.getAttribute("state") === "Encontrado") {
+         style.textContent += `
+            .pet-card__state {
+               color: #49a223;
+            }`;
+      }
 
       this.shadow.appendChild(style);
 

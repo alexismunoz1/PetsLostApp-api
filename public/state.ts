@@ -1,5 +1,5 @@
-const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
-// const API_BASE_URL = "http://localhost:3000";
+// const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
+const API_BASE_URL = "http://localhost:3000";
 
 export const state = {
    data: {
@@ -12,7 +12,9 @@ export const state = {
       const dataUser = JSON.parse(localStorage.getItem("dataUser"));
       const currentState = state.getState();
 
-      if (dataUser) {
+      if (!dataUser || dataUser == null || dataUser == undefined) {
+         return;
+      } else {
          this.setState({
             ...currentState,
             user: {
@@ -196,17 +198,89 @@ export const state = {
       return resReportPet.json();
    },
 
+   async editPet(petid, petname: string, lat, lng, ubication: string, petimage): Promise<Response> {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const resReportPet = await fetch(`${API_BASE_URL}/me/pets`, {
+         method: "PUT",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            petid,
+            petname,
+            lat,
+            lng,
+            ubication,
+            petimage,
+         }),
+      });
+
+      return resReportPet.json();
+   },
+
+   async updateStatePet(petid, petstate) {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const statePet = await fetch(`${API_BASE_URL}/me/pets/state`, {
+         method: "PUT",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            petid,
+            petstate,
+         }),
+      });
+   },
+
+   async getPetById(petId: string) {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const petById = await fetch(`${API_BASE_URL}/me/pets/${petId}`, {
+         method: "GET",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+      });
+
+      return petById.json();
+   },
+
    async getUserPets(): Promise<any> {
-      const currentUser = this.getState().user;
+      const currentState = this.getState();
+      const token = currentState.user.token;
 
       const pets = await fetch(`${API_BASE_URL}/me/pets`, {
          method: "GET",
          headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${token}`,
          },
       });
 
       return pets.json();
+   },
+
+   async deletePet(petid) {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const deletePet = await fetch(`${API_BASE_URL}/me/pets`, {
+         method: "DELETE",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            petid,
+         }),
+      });
    },
 };

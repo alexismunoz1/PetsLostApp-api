@@ -1,0 +1,70 @@
+.editpets__page {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.editpets__title {
+   margin: 30px 10px 50px 10px;
+   font-family: "Poppins";
+   font-weight: bold;
+   text-align: center;
+   font-size: 40px;
+   line-height: 60px;
+   color: #000000;
+   max-width: 379px;
+}
+
+.editpets__input-petname {
+}
+
+.editpets__dropzone-img {
+   max-height: 142px;
+   margin: 50px 0 20px 0;
+}
+
+.editpets__dropzone-button {
+}
+
+.editpets__content-mapbox {
+   margin: 50px 0 20px 0;
+}
+
+.editpets__input-mapbox {
+}
+
+.editpets__button-mapbox {
+   margin: 20px 0 20px 0;
+}
+
+.editpets__text {
+   text-align: center;
+   font-family: Poppins;
+   font-weight: 500;
+   font-size: 16px;
+   text-transform: uppercase;
+   color: #000000;
+   max-width: 379px;
+}
+
+.editpets__save-button {
+   margin: 45px 0 20px 0;
+}
+
+.editpets__found-button {
+   margin-bottom: 20px;
+}
+
+.editpets__cancel-button {
+   margin-bottom: 20px;
+}
+
+.editpets__text-despublcar {
+   font-family: Poppins;
+   margin-bottom: 40px;
+   font-weight: 500;
+   font-size: 16px;
+   text-transform: uppercase;
+   text-decoration-line: underline;
+   color: #ff3a3a;
+}

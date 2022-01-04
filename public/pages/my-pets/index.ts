@@ -3,6 +3,9 @@ import { Router } from "@vaadin/router";
 
 class InitMyPetsPage extends HTMLElement {
    connectedCallback() {
+      state.subscribe(() => {
+         this.render();
+      });
       this.render();
    }
    render(): void {
@@ -14,10 +17,16 @@ class InitMyPetsPage extends HTMLElement {
          state.getUserPets().then((pets) => {
             if (pets.length > 0) {
                pets.forEach((pet) => {
+                  let petState = "";
+                  if (pet.petstate === "lost") {
+                     petState = "Perdido";
+                  } else if (pet.petstate === "found") {
+                     petState = "Encontrado";
+                  }
+
                   this.innerHTML += `
-                  <pet-card image="${pet.petimage}" name="${pet.petname}" ubication="${pet.ubication}" petId="${pet.id}"></pet-card>`;
+                  <pet-card image="${pet.petimage}" name="${pet.petname}" ubication="${pet.ubication}" state="${petState}" petId="${pet.id}"></pet-card>`;
                });
-               console.log(pets);
             } else {
                this.innerHTML += `
                   <p class="mypets__text">Aun no reportaste mascotas perdidas</p>`;

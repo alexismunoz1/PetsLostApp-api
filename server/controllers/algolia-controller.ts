@@ -33,11 +33,22 @@ export const algoliaController = {
          return await indexPets.partialUpdateObject({
             objectID: updatePetData.get("id"),
             petname: updatePetData.get("petname"),
-            petstate: updatePetData.get("petstate"),
             _geoloc: {
                lat: parseLat,
                lng: parseLng,
             },
+         });
+      } catch (error) {
+         return error;
+      }
+   },
+
+   async statePetInAlgolia(updatePetData) {
+      // Actualiza el estado de una mascota en Algolia.
+      try {
+         return await indexPets.partialUpdateObject({
+            objectID: updatePetData.get("id"),
+            petstate: updatePetData.get("petstate"),
          });
       } catch (error) {
          return error;
@@ -54,7 +65,12 @@ export const algoliaController = {
       }
    },
 
-   async searchPetsInAlgoliaByLocation(lat: any, lng: any, distance: number, petstate: string): Promise<object> {
+   async searchPetsInAlgoliaByLocation(
+      lat: any,
+      lng: any,
+      distance: number,
+      petstate: string
+   ): Promise<object> {
       // Obtiene las mascotas de un usuario de Algolia por ubicación geográfica, distancia y estado.
       // El estado de la mascota, puede ser "lost" o "found".
       if (!distance) {

@@ -124,20 +124,11 @@ app.post("/me/pets", authMiddlewares, async (req, res) => {
 app.put("/me/pets", authMiddlewares, async (req, res) => {
    // Endpoint para actualizar los datos de una mascota
    const userId = req["_user"].id;
-   const { petid, petname, petstate, lat, lng, ubication, petimage } = req.body;
+   const { petid, petname, lat, lng, ubication, petimage } = req.body;
 
    const imageUrl = await uploadImageCloudinary(petimage);
 
-   const pet = await petController.updatePet(
-      userId,
-      petid,
-      petname,
-      petstate,
-      lat,
-      lng,
-      ubication,
-      imageUrl
-   );
+   const pet = await petController.updatePet(userId, petid, petname, lat, lng, ubication, imageUrl);
 
    if (pet) {
       const updatePetInAlgolia = await algoliaController.updatePetInAlgolia(pet);
@@ -150,25 +141,47 @@ app.put("/me/pets", authMiddlewares, async (req, res) => {
    }
 });
 
+app.put("/me/pets/state", authMiddlewares, async (req, res) => {
+   // Endpoint para actualizar el estado de una mascota
+   // Si esta perdido "lost", si fue encontrado "found"
+   const userId = req["_user"].id;
+   const { petid, petstate } = req.body;
+
+   const pet = await petController.statePet(userId, petid, petstate);
+
+   if (pet) {
+      const statePetInAlgolia = await algoliaController.statePetInAlgolia(pet);
+
+      if (statePetInAlgolia) {
+         res.status(200).json({ pet, statePetInAlgolia });
+      }
+   } else {
+      res.status(500).json({ message: "Error updating pet" });
+   }
+});
+
 app.get("/me/pets", authMiddlewares, async (req, res) => {
    // Endpoint para obtener las mascotas del usuario autenticado
    const userId = req["_user"].id;
-   const { petname } = req.body;
 
-   // Si se introduce un nombre de mascota en el body,
-   // se filtra por el nombre de la mascota, del usuario autenticado.
-   // Si no se introduce nada, se traen todas las mascotas del usuario autenticado.
    try {
-      if (petname) {
-         const pet = await petController.findPetByName(userId, petname);
-
-         res.status(200).json(pet);
-      } else {
-         const pets = await petController.getPetsByUserId(userId);
-         res.status(200).json(pets);
-      }
+      const pets = await petController.getPetsByUserId(userId);
+      res.status(200).json(pets);
    } catch (error) {
       res.status(500).json({ message: "Error getting pets" });
+   }
+});
+
+app.get("/me/pets/:petId", authMiddlewares, async (req, res) => {
+   // Endpoint para obtener una mascota por id
+   const userId = req["_user"].id;
+   const { petId } = req.params;
+
+   try {
+      const pet = await petController.getPetById(userId, petId);
+      res.status(200).json(pet[0]);
+   } catch (error) {
+      res.status(500).json({ message: "Error getting pet" });
    }
 });
 
