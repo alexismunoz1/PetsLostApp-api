@@ -1,3 +1,4 @@
+import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
 class InitMyDataPage extends HTMLElement {
@@ -52,6 +53,7 @@ class InitMyDataPage extends HTMLElement {
             if (res.status === 200) {
                state.getTokenUser(password);
                alert(`Bienvenidx ${fullname}!\nSus datos fueron guardados correctamente`);
+               Router.go("/home");
             } else {
                alert("Error al crear la cuenta");
             }

@@ -283,4 +283,19 @@ export const state = {
          }),
       });
    },
+
+   async getPetsAround(lat, lng) {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const petsAround = await fetch(`${API_BASE_URL}/pets/around?lat=${lat}&lng=${lng}`, {
+         method: "GET",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+      });
+
+      return petsAround.json();
+   },
 };

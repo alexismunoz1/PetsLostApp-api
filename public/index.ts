@@ -6,6 +6,7 @@ import "./components/header";
 import "./components/input/";
 import "./components/button";
 import "./components/pet-card";
+import "./components/pet-card-around";
 
 // Pages
 import "./pages/home/index";

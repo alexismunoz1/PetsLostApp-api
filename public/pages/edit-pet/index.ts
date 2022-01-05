@@ -151,7 +151,7 @@ class InitEditPetPage extends HTMLElement {
          const user = state.getState().user;
          const petstate = "found";
          state.updateStatePet(user.currentPetId, petstate);
-         alert("Se ha actualizado el estado de la mascota a 'encontradx'");
+         alert('Se ha actualizado el estado de la mascota a "Encontrado"');
          Router.go("/my-pets");
       });
 

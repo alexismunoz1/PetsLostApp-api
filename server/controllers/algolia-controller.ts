@@ -14,6 +14,8 @@ export const algoliaController = {
             objectID: newPetData.get("id"),
             petname: newPetData.get("petname"),
             petstate: newPetData.get("petstate"),
+            ubication: newPetData.get("ubication"),
+            petimage: newPetData.get("petimage"),
             _geoloc: {
                lat: parseLat,
                lng: parseLng,
@@ -33,6 +35,8 @@ export const algoliaController = {
          return await indexPets.partialUpdateObject({
             objectID: updatePetData.get("id"),
             petname: updatePetData.get("petname"),
+            ubication: updatePetData.get("ubication"),
+            petimage: updatePetData.get("petimage"),
             _geoloc: {
                lat: parseLat,
                lng: parseLng,

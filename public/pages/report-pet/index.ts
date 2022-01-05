@@ -141,7 +141,7 @@ class InitReportPage extends HTMLElement {
 
       // Evento de cancelar el reporte
       const cancelButton = this.querySelector(".report__cancel-button");
-      cancelButton.addEventListener("click", (e) => {
+      cancelButton.addEventListener("click", () => {
          Router.go("/home");
          state.setState({
             user: {

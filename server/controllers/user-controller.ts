@@ -15,10 +15,6 @@ export const userController = {
          });
 
          return user;
-         // return await User.create({
-         //    fullname,
-         //    email,
-         // });
       } catch (error) {
          throw new Error(error);
       }

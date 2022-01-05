@@ -50,6 +50,8 @@ class HeaderCustomElement extends HTMLElement {
       const logoEl = this.querySelector(".header-comp__logo");
 
       logoEl.addEventListener("click", () => {
+         menuToggleEl.classList.remove("active");
+         menuEl.classList.remove("active");
          Router.go("/home");
       });
 
@@ -61,8 +63,8 @@ class HeaderCustomElement extends HTMLElement {
       const textEl = this.querySelectorAll(".home__menu-text");
       textEl.forEach((element) => {
          element.addEventListener("click", (e) => {
-            menuToggleEl.classList.toggle("active");
-            menuEl.classList.toggle("active");
+            menuToggleEl.classList.remove("active");
+            menuEl.classList.remove("active");
          });
       });
 
@@ -102,7 +104,7 @@ class HeaderCustomElement extends HTMLElement {
                user: {},
             });
             state.clearLocalStorage();
-            Router.go("/home");
+            Router.go("/verify-email");
          } else if (singOffEl.textContent === "Iniciar sesión") {
             menuToggleEl.classList.toggle("active");
             menuEl.classList.toggle("active");
