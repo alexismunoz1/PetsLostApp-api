@@ -88,15 +88,19 @@ class PetCardAroundCustomElement extends HTMLElement {
       reportInfoEl.addEventListener("click", () => {
          const currentState = state.getState();
 
-         state.setState({
-            ...currentState,
-            reportInfo: {
-               petId,
-               petname,
-            },
-         });
+         if (currentState.user.token) {
+            state.setState({
+               ...currentState,
+               reportInfo: {
+                  petId,
+                  petname,
+               },
+            });
 
-         Router.go("/report-info");
+            Router.go("/report-info");
+         } else {
+            Router.go("/verify-email");
+         }
       });
 
       this.shadow.appendChild(style);
