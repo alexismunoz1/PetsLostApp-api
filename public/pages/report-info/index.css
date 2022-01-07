@@ -1,0 +1,34 @@
+.report-info__page {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.report-info__title {
+   margin: 30px;
+   font-family: "Poppins";
+   font-weight: bold;
+   text-align: center;
+   font-size: 40px;
+   line-height: 60px;
+   color: #000000;
+   max-width: 379px;
+}
+
+.report-info__input-name {
+   margin-bottom: 20px;
+}
+
+.report-info__input-phone {
+}
+
+.report-info__textarea {
+   margin: 20px 0 40px 0;
+}
+
+.report-info__btn-send {
+}
+
+.report-info__btn-cancel {
+   margin: 20px 0 40px 0;
+}

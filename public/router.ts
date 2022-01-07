@@ -10,6 +10,7 @@ export function initRouter(rootEl: Element) {
       { path: "/report-pet", component: "report-pet-page" },
       { path: "/my-pets", component: "my-pets-page" },
       { path: "/edit-pet", component: "edit-pet-page" },
+      { path: "/report-info", component: "report-info-page" },
    ]);
 
    if (location.pathname === "/") {

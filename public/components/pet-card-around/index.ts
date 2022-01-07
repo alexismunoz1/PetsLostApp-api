@@ -10,24 +10,25 @@ class PetCardAroundCustomElement extends HTMLElement {
 
    render(): void {
       let petId = this.getAttribute("petId");
+      let petname = this.getAttribute("petname");
+
       this.shadow.innerHTML = `
-            <div class="pet-card-around" petId="${petId}">
-                  <img class="pet-card-around__image" src="${this.getAttribute("image")}">
-               <div class="pet-card-around__info-cont">
-                  <div class="pet-card-around__info">
-                     <h2 class="pet-card-around__name">${this.getAttribute("name")}</h2>
-                     <p class="pet-card-around__ubication">${this.getAttribute("ubication")}</p>
-                  </div>
-                  <p class="pet-card-around__report-info">Reportar información</p>
+         <div class="pet-card-around" petId="${petId}">
+               <img class="pet-card-around__image" src="${this.getAttribute("image")}">
+            <div class="pet-card-around__info-cont">
+               <div class="pet-card-around__info">
+                  <h2 class="pet-card-around__name">${petname}</h2>
+                  <p class="pet-card-around__ubication">${this.getAttribute("ubication")}</p>
                </div>
-            </div>`;
+               <p class="pet-card-around__report-info">Reportar información</p>
+            </div>
+         </div>`;
 
       const style = document.createElement("style");
       style.textContent = `
          .pet-card-around {
-            display: flex;
+            max-width: 335px;
             flex-direction: column;
-            width: 335px;
             border: 2px solid #000000;
             box-sizing: border-box;
             border-radius: 4px;
@@ -83,12 +84,22 @@ class PetCardAroundCustomElement extends HTMLElement {
             color: #3E91DD;
          }`;
 
-      this.shadow.appendChild(style);
-
-      const editPetEl = this.shadow.querySelector(".pet-card-around__report-info");
-      editPetEl.addEventListener("click", () => {
+      const reportInfoEl = this.shadow.querySelector(".pet-card-around__report-info");
+      reportInfoEl.addEventListener("click", () => {
          const currentState = state.getState();
+
+         state.setState({
+            ...currentState,
+            reportInfo: {
+               petId,
+               petname,
+            },
+         });
+
+         Router.go("/report-info");
       });
+
+      this.shadow.appendChild(style);
    }
 }
 

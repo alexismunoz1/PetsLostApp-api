@@ -33,7 +33,7 @@ class InitHomePage extends HTMLElement {
             if (pets.length > 0) {
                pets.forEach((pet) => {
                   this.innerHTML += `
-                  <pet-card-around image="${pet.petimage}" name="${pet.petname}" ubication="${pet.ubication}" petId="${pet.id}"></pet-card-around>`;
+                     <pet-card-around image="${pet.petimage}" petname="${pet.petname}" ubication="${pet.ubication}" petId="${pet.objectID}"></pet-card-around>`;
                });
             } else {
                this.innerHTML += `

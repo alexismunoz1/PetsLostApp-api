@@ -1,9 +1,12 @@
-// const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
+
+type menuReportState = "active" | "none";
 
 export const state = {
    data: {
       user: {},
+      editPet: {},
+      reportInfo: {},
    },
 
    listeners: [],
@@ -297,5 +300,26 @@ export const state = {
       });
 
       return petsAround.json();
+   },
+
+   async reportInfo(petid, fullname, phonenumber, report) {
+      const currentState = this.getState();
+      const token = currentState.user.token;
+
+      const reportInfo = await fetch(`${API_BASE_URL}/pets/report`, {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            petid,
+            fullname,
+            phonenumber,
+            report,
+         }),
+      });
+
+      return reportInfo.json();
    },
 };

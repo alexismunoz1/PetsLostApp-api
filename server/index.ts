@@ -10,6 +10,10 @@ import { userController } from "./controllers/user-controller";
 import { petController } from "./controllers/pet-controller";
 import { algoliaController } from "./controllers/algolia-controller";
 import { uploadImageCloudinary } from "./controllers/cloudinary-controller";
+import { reportController } from "./controllers/report-controller";
+
+// Lib
+import { sendgridFunction } from "./lib/sendgrid";
 
 // Middlewares
 import { authMiddlewares } from "./controllers/middlewares";
@@ -215,6 +219,33 @@ app.get("/pets/around", async (req, res) => {
       res.status(200).json(pets);
    } catch (error) {
       res.status(500).json({ message: "Error getting pets", error });
+   }
+});
+
+app.post("/pets/report", authMiddlewares, async (req, res) => {
+   const userId = req["_user"].id;
+   const { petid, fullname, phonenumber, report } = req.body;
+
+   try {
+      const [created, pet] = await reportController.sendReport(
+         userId,
+         petid,
+         fullname,
+         phonenumber,
+         report
+      );
+
+      const sendgidEmail = await sendgridFunction(
+         pet.getDataValue("user").email,
+         pet.getDataValue("petname"),
+         pet.getDataValue("user").fullname,
+         created.getDataValue("phonenumber"),
+         created.getDataValue("report")
+      );
+
+      res.status(200).json({ created, sendgidEmail });
+   } catch (error) {
+      res.status(500).json({ message: "Error creating report", error });
    }
 });
 
