@@ -12,6 +12,7 @@ export const state = {
    listeners: [],
 
    initLocalStorage() {
+      // Metodo para inicializar el localStorage
       const dataUser = JSON.parse(localStorage.getItem("dataUser"));
       const currentState = state.getState();
 
@@ -31,10 +32,12 @@ export const state = {
    },
 
    getState() {
+      // Metodo para obtener el estado actual
       return this.data;
    },
 
    setState(newData): void {
+      // Metodo para actualizar el estado
       this.data = newData;
       this.setUserDataLocalStorage();
       for (const cb of this.listeners) {
@@ -44,26 +47,44 @@ export const state = {
    },
 
    subscribe(callback: (any) => any): void {
+      // Metodo para subscribirse a los cambios del estado
       this.listeners.push(callback);
    },
 
    setUserDataLocalStorage(): void {
+      // Metodo para guardar los datos del usuario en el localStorage
       const dataUser = this.getState().user;
       localStorage.setItem("dataUser", JSON.stringify(dataUser));
    },
 
    clearLocalStorage(): void {
+      // Metodo para limpiar el localStorage
       localStorage.removeItem("dataUser");
    },
 
    addCurrentUbication(lat, lng): void {
+      // Metodo para agregar la ubicacion actual
       const currentState = this.getState();
       currentState.user.lat = lat;
       currentState.user.lng = lng;
       this.setState(currentState);
    },
 
+   currentMarkerPosition(lat, lng): void {
+      // Metodo para obtener la posicion actual del marcador de MapBox
+      const currentState = this.getState();
+      state.setState({
+         ...currentState,
+         user: {
+            ...currentState.user,
+            currentMarkerLat: lat,
+            currentMarkerLng: lng,
+         },
+      });
+   },
+
    async verifyEmail(email: string): Promise<Response> {
+      // Metodo para verificar el correo electronico
       const currentState = this.getState();
       const resVerifyEmail = await fetch(`${API_BASE_URL}/auth/verify-email`, {
          method: "POST",
@@ -90,6 +111,7 @@ export const state = {
    },
 
    async singup(fullname: string, email: string, password: string): Promise<Response> {
+      // Metodo para registrar un usuario
       const currentState = this.getState();
       const currentEmail: string = currentState.user.email;
 
@@ -117,6 +139,7 @@ export const state = {
    },
 
    async getTokenUser(password: string): Promise<Response> {
+      // Metodo para obtener el token del usuario
       const currentState = this.getState();
 
       const resToken = await fetch(`${API_BASE_URL}/auth/token`, {
@@ -144,6 +167,7 @@ export const state = {
    },
 
    async geUserDatatBytoken(token: string): Promise<Response> {
+      // Metodo para obtener los datos del usuario
       const currentState = this.getState();
 
       const resDataUser = await fetch(`${API_BASE_URL}/me`, {
@@ -167,19 +191,8 @@ export const state = {
       });
    },
 
-   currentMarkerPosition(lat, lng): void {
-      const currentState = this.getState();
-      state.setState({
-         ...currentState,
-         user: {
-            ...currentState.user,
-            currentMarkerLat: lat,
-            currentMarkerLng: lng,
-         },
-      });
-   },
-
    async addPet(petname: string, lat, lng, ubication, petimage): Promise<Response> {
+      // Metodo para agregar una mascota
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -202,6 +215,7 @@ export const state = {
    },
 
    async editPet(petid, petname: string, lat, lng, ubication: string, petimage): Promise<Response> {
+      // Metodo para editar los datos de una mascota
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -225,6 +239,7 @@ export const state = {
    },
 
    async updateStatePet(petid, petstate) {
+      // Metodo para actualizar el estado (ya sea perdido o encontrado) de una mascota
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -242,6 +257,7 @@ export const state = {
    },
 
    async getPetById(petId: string) {
+      // Metodo para obtener una mascota por su id
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -257,6 +273,7 @@ export const state = {
    },
 
    async getUserPets(): Promise<any> {
+      // Metodo para obtener las mascotas de un usuario
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -272,6 +289,7 @@ export const state = {
    },
 
    async deletePet(petid) {
+      // Metodo para eliminar una mascota
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -288,6 +306,7 @@ export const state = {
    },
 
    async getPetsAround(lat, lng) {
+      // Metodo para obtener las mascotas cercanas a una ubicacion
       const currentState = this.getState();
       const token = currentState.user.token;
 
@@ -303,6 +322,7 @@ export const state = {
    },
 
    async reportInfo(petid, fullname, phonenumber, report) {
+      // Metodo para reportar una mascota
       const currentState = this.getState();
       const token = currentState.user.token;
 

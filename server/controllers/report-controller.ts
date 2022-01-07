@@ -1,6 +1,7 @@
 import { Report, User, Pet } from "../models";
 
 export const reportController = {
+   // Metodo para crear un reporte
    async sendReport(userId, petId, fullname, phonenumber, report) {
       const created = await Report.create({
          userId,

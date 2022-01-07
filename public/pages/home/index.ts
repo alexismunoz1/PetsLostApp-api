@@ -1,4 +1,3 @@
-import { Router } from "@vaadin/router";
 import { state } from "../../state";
 
 class InitHomePage extends HTMLElement {

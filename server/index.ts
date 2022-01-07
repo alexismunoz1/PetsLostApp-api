@@ -223,6 +223,7 @@ app.get("/pets/around", async (req, res) => {
 });
 
 app.post("/pets/report", authMiddlewares, async (req, res) => {
+   // Endopoint para reportar una mascota
    const userId = req["_user"].id;
    const { petid, fullname, phonenumber, report } = req.body;
 
