@@ -1,7 +1,5 @@
 const API_BASE_URL = "https://dwf-m7-postgresql.herokuapp.com";
 
-type menuReportState = "active" | "none";
-
 export const state = {
    data: {
       user: {},

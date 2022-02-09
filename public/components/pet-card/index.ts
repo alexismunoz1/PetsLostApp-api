@@ -76,6 +76,9 @@ class PetCardCustomElement extends HTMLElement {
 
          .pet-card__icon {
             cursor: pointer;
+            height: 30px;
+            width: auto;
+            margin: auto 0;
          }`;
 
       if (this.getAttribute("state") === "Perdido") {
