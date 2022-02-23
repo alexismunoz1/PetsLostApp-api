@@ -25,7 +25,14 @@ app.use(
       limit: "100mb",
    })
 );
-app.use(cors());
+
+const allowedHosts = ["https://dwf-m8-5b5c4.web.app/"];
+
+app.use(
+   cors({
+      origin: allowedHosts,
+   })
+);
 
 // Puerto de la aplicacion en heroku o 3000 en local y asignacion de rutas
 const staticDirPath = path.resolve(__dirname, "../../dist");
@@ -113,7 +120,14 @@ app.post("/me/pets", authMiddlewares, async (req, res) => {
    const { petname, lat, lng, ubication, petimage } = req.body;
 
    const imageUrl = await uploadImageCloudinary(petimage);
-   const pet = await petController.createNewLostPet(userId, petname, lat, lng, ubication, imageUrl);
+   const pet = await petController.createNewLostPet(
+      userId,
+      petname,
+      lat,
+      lng,
+      ubication,
+      imageUrl
+   );
 
    if (pet) {
       const petInAlgolia = await algoliaController.addPetInAlgolia(pet);
@@ -132,7 +146,15 @@ app.put("/me/pets", authMiddlewares, async (req, res) => {
 
    const imageUrl = await uploadImageCloudinary(petimage);
 
-   const pet = await petController.updatePet(userId, petid, petname, lat, lng, ubication, imageUrl);
+   const pet = await petController.updatePet(
+      userId,
+      petid,
+      petname,
+      lat,
+      lng,
+      ubication,
+      imageUrl
+   );
 
    if (pet) {
       const updatePetInAlgolia = await algoliaController.updatePetInAlgolia(pet);

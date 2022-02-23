@@ -212,7 +212,14 @@ export const state = {
       return resReportPet.json();
    },
 
-   async editPet(petid, petname: string, lat, lng, ubication: string, petimage): Promise<Response> {
+   async editPet(
+      petid,
+      petname: string,
+      lat,
+      lng,
+      ubication: string,
+      petimage
+   ): Promise<Response> {
       // Metodo para editar los datos de una mascota
       const currentState = this.getState();
       const token = currentState.user.token;
@@ -308,13 +315,16 @@ export const state = {
       const currentState = this.getState();
       const token = currentState.user.token;
 
-      const petsAround = await fetch(`${API_BASE_URL}/pets/around?lat=${lat}&lng=${lng}`, {
-         method: "GET",
-         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-         },
-      });
+      const petsAround = await fetch(
+         `${API_BASE_URL}/pets/around?lat=${lat}&lng=${lng}`,
+         {
+            method: "GET",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+            },
+         }
+      );
 
       return petsAround.json();
    },
