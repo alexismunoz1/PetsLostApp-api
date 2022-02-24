@@ -26,7 +26,7 @@ app.use(
    })
 );
 
-const allowedHosts = ["https://dwf-m8-5b5c4.web.app/", "http://localhost:8080/"];
+const allowedHosts = ["http://localhost:8080/", "https://dwf-m8-5b5c4.web.app/"];
 
 app.use(
    cors({
