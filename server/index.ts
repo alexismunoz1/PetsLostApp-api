@@ -20,15 +20,16 @@ import { authMiddlewares } from "./controllers/middlewares";
 
 // Inicializacion de express
 const app = express();
-app.use(
-   express.json({
-      limit: "100mb",
-   })
-);
 
 app.use(
    cors({
       origin: "http://localhost:8080/",
+   })
+);
+
+app.use(
+   express.json({
+      limit: "100mb",
    })
 );
 
