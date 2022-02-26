@@ -17,6 +17,7 @@ import { sendgridFunction } from "./lib/sendgrid";
 
 // Middlewares
 import { authMiddlewares } from "./controllers/middlewares";
+import { all } from "sequelize/types/lib/operators";
 
 // Inicializacion de express
 const app = express();
@@ -33,7 +34,14 @@ const app = express();
 //    },
 //    optionsSuccessStatus: 200,
 // };
-app.use(cors());
+
+const allowedHosts = ["http://127.0.0.1:8080"];
+
+app.use(
+   cors({
+      origin: allowedHosts,
+   })
+);
 
 app.use(
    express.json({
