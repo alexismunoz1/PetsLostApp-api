@@ -33,12 +33,12 @@ const app = express();
 //    optionsSuccessStatus: 200,
 // };
 
-var corsOptions = {
+const corsOptions = {
    origin: "http://127.0.0.1:8080",
    optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(
    express.json({
@@ -50,14 +50,14 @@ app.use(
 const staticDirPath = path.resolve(__dirname, "../../dist");
 const port = process.env.PORT || 3000;
 
-app.get("/test", (req, res) => {
+app.get("/test", cors(corsOptions), (req, res) => {
    // Endpoint para testear el servidor
    res.send({
       message: true,
    });
 });
 
-app.get("/users", async (req, res) => {
+app.get("/users", cors(corsOptions), async (req, res) => {
    // Endpoint para traer todos los usuarios
    try {
       const users = await userController.getUsers();
@@ -67,7 +67,7 @@ app.get("/users", async (req, res) => {
    }
 });
 
-app.post("/auth/verify-email", async (req, res) => {
+app.post("/auth/verify-email", cors(corsOptions), async (req, res) => {
    // Endpoint para verificar si el mail existe en la base de datos
    const { email } = req.body;
    const user = await userController.findUserByEmail(email);
@@ -78,7 +78,7 @@ app.post("/auth/verify-email", async (req, res) => {
    }
 });
 
-app.post("/auth", async (req, res) => {
+app.post("/auth", cors(corsOptions), async (req, res) => {
    // Endpoint para crear y autenticar un usuario
    const { fullname, email, password } = req.body;
 
@@ -92,7 +92,7 @@ app.post("/auth", async (req, res) => {
    }
 });
 
-app.post("/auth/token", async (req, res) => {
+app.post("/auth/token", cors(corsOptions), async (req, res) => {
    // Endpoint para obtener el token de autenticacion
    const { email, password } = req.body;
    const token = await authController.tokenFunction(email, password);
@@ -104,7 +104,7 @@ app.post("/auth/token", async (req, res) => {
    }
 });
 
-app.get("/me", authMiddlewares, async (req, res) => {
+app.get("/me", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para obtener el usuario autenticado
    const userId = req["_user"].id;
 
@@ -112,7 +112,7 @@ app.get("/me", authMiddlewares, async (req, res) => {
    res.status(200).json(user);
 });
 
-app.put("/me", authMiddlewares, async (req, res) => {
+app.put("/me", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para actualizar los datos del usuario autenticado
    const userId = req["_user"].id;
    const { fullname, email } = req.body;
@@ -126,7 +126,7 @@ app.put("/me", authMiddlewares, async (req, res) => {
    }
 });
 
-app.post("/me/pets", authMiddlewares, async (req, res) => {
+app.post("/me/pets", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para crear una nueva mascota
    const userId = req["_user"].id;
    const { petname, lat, lng, ubication, petimage } = req.body;
@@ -151,7 +151,7 @@ app.post("/me/pets", authMiddlewares, async (req, res) => {
    }
 });
 
-app.put("/me/pets", authMiddlewares, async (req, res) => {
+app.put("/me/pets", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para actualizar los datos de una mascota
    const userId = req["_user"].id;
    const { petid, petname, lat, lng, ubication, petimage } = req.body;
@@ -179,7 +179,7 @@ app.put("/me/pets", authMiddlewares, async (req, res) => {
    }
 });
 
-app.put("/me/pets/state", authMiddlewares, async (req, res) => {
+app.put("/me/pets/state", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para actualizar el estado de una mascota
    // Si esta perdido "lost", si fue encontrado "found"
    const userId = req["_user"].id;
@@ -198,7 +198,7 @@ app.put("/me/pets/state", authMiddlewares, async (req, res) => {
    }
 });
 
-app.get("/me/pets", authMiddlewares, async (req, res) => {
+app.get("/me/pets", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para obtener las mascotas del usuario autenticado
    const userId = req["_user"].id;
 
@@ -210,7 +210,7 @@ app.get("/me/pets", authMiddlewares, async (req, res) => {
    }
 });
 
-app.get("/me/pets/:petId", authMiddlewares, async (req, res) => {
+app.get("/me/pets/:petId", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para obtener una mascota por id
    const userId = req["_user"].id;
    const { petId } = req.params;
@@ -223,7 +223,7 @@ app.get("/me/pets/:petId", authMiddlewares, async (req, res) => {
    }
 });
 
-app.delete("/me/pets", authMiddlewares, async (req, res) => {
+app.delete("/me/pets", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endpoint para eliminar una mascota del usuario autenticado
    const userId = req["_user"].id;
    const { petid } = req.body;
@@ -238,7 +238,7 @@ app.delete("/me/pets", authMiddlewares, async (req, res) => {
    }
 });
 
-app.get("/pets/around", async (req, res) => {
+app.get("/pets/around", cors(corsOptions), async (req, res) => {
    // Endpoint para obtener las mascotas cercanas a una ubicacion
    const { lat, lng } = req.query;
    const { distance, petstate } = req.body;
@@ -256,7 +256,7 @@ app.get("/pets/around", async (req, res) => {
    }
 });
 
-app.post("/pets/report", authMiddlewares, async (req, res) => {
+app.post("/pets/report", cors(corsOptions), authMiddlewares, async (req, res) => {
    // Endopoint para reportar una mascota
    const userId = req["_user"].id;
    const { petid, fullname, phonenumber, report } = req.body;
