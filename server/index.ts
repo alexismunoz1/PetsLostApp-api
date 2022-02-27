@@ -20,22 +20,21 @@ import { authMiddlewares } from "./controllers/middlewares";
 
 const app = express();
 
-// var whitelist = ["http://127.0.0.1:8080"];
-// var corsOptions = {
-//    origin: function (origin, callback) {
-//       if (whitelist.indexOf(origin) !== -1) {
-//          callback(null, true);
-//       } else {
-//          callback(new Error("Not allowed by CORS"));
-//       }
-//    },
+var whitelist = ["http://127.0.0.1:8080"];
+var corsOptions = {
+   origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+         callback(null, true);
+      } else {
+         callback(new Error("Not allowed by CORS"));
+      }
+   },
+};
+
+// const corsOptions = {
+//    origin: "http://127.0.0.1:8080",
 //    optionsSuccessStatus: 200,
 // };
-
-const corsOptions = {
-   origin: "http://127.0.0.1:8080",
-   optionsSuccessStatus: 200,
-};
 
 // app.use(cors(corsOptions));
 
