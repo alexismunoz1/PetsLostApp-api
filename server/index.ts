@@ -17,7 +17,6 @@ import { sendgridFunction } from "./lib/sendgrid";
 
 // Middlewares
 import { authMiddlewares } from "./controllers/middlewares";
-import { all } from "sequelize/types/lib/operators";
 
 const app = express();
 
