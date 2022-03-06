@@ -282,6 +282,12 @@ app.post("/pets/report", cors(corsOptions), authMiddlewares, async (req, res) =>
    }
 });
 
+app.get("/api/mapbox-token", (req, res) => {
+   res.json({
+      token: process.env.MAPBOX_TOKEN,
+   });
+});
+
 app.use(express.static(staticDirPath));
 
 // Static files
